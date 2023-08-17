@@ -2,7 +2,8 @@
 
 from .event_handler import EventHandler
 from .scene_2d import Scene2D
-from .timers import Timer, Deltatimer, Cronometer
+from .keyboard import Keyboard
+from .timers import Deltatimer
 from .window import Window
 from .config import CallableScene
 
@@ -17,6 +18,7 @@ class Game:
             "main": CallableScene(Scene2D, {"game": self})  # set main as an empty scene
         }
         self.change_scene("main")  # init empty scene
+        self.keyboard = Keyboard()
         self.deltatimer = Deltatimer()
 
     def change_scene(self, name: str):
@@ -33,7 +35,7 @@ class Game:
         while True:
             dt = self.deltatimer.get_dt()
             self.window.clean((30, 30, 30))
-            self.event_handler.loop(self.window)
+            self.event_handler.loop(self.window, self.keyboard)
             self.actual_scene.update(dt)
             self.actual_scene.render()
             self.window.render()
