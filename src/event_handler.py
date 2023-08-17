@@ -11,10 +11,9 @@ class EventHandler:
 
     def loop(self, window: Window, keyboard: Keyboard):
         for event in pygame.event.get():
+            keyboard.handle_event(event)
             match event.type:
                 case pygame.QUIT:
                     window.quit()
-                case pygame.KEYDOWN:
-                    if event.key == pygame.K_F11:
-                        window.toggle_fullscreen()
-            keyboard.handle_event(event)
+        if keyboard.pressed_this_frame(pygame.K_F11):
+            window.toggle_fullscreen()
