@@ -4,7 +4,7 @@ import pygame
 
 from typing import Optional
 from dataclasses import dataclass
-from .timers import Timer
+from ..timers import Timer
 
 
 @dataclass
