@@ -2,7 +2,7 @@
 
 from .event_handler import EventHandler
 from .scene_2d import Scene2D
-from .keyboard import Keyboard
+from .inputs import Keyboard
 from .timers import Deltatimer
 from .window import Window
 from .config import CallableScene

@@ -2,7 +2,7 @@
 
 import pygame
 
-from .keyboard import Keyboard
+from .inputs import Keyboard
 from .window import Window
 
 
