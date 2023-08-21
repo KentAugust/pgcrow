@@ -13,20 +13,17 @@ class Window:
     def __init__(
         self,
         config: WindowConfig,
-        title="Pygame Window",
-        init_fullscreen=False,
-        window_sizes: list[tuple[int, int]] | None = None,
     ) -> None:
         self.config = config
-        self.is_fullscreen = init_fullscreen and self.config.can_fullscreen
+        self.is_fullscreen = self.config.start_fullscreen and self.config.can_fullscreen
 
         if not pygame.get_init():
             pygame.init()
 
         # init desktop sizes
         self.desktop_sizes = pygame.display.get_desktop_sizes()
-        window_sizes = window_sizes if window_sizes else []
-        for size in sorted(window_sizes, reverse=True):
+        self.config.avalible_window_sizes = self.config.avalible_window_sizes if self.config.avalible_window_sizes else []
+        for size in sorted(self.config.avalible_window_sizes, reverse=True):
             if self.config.window_size not in set(self.desktop_sizes):
                 self.desktop_sizes.append(size)
         if self.config.window_size not in set(self.desktop_sizes):
@@ -36,7 +33,7 @@ class Window:
         self.update_win_size(
             self.desktop_sizes.index(self.config.window_size)
         )  # init window
-        self.set_title(title)
+        self.set_title(self.config.title)
 
         self.clock: pygame.Clock = pygame.Clock()
 
@@ -109,14 +106,13 @@ class Window:
 class WindowDisplay(Window):
     """Window class that blits on a intermediate display"""
 
-    def __init__(self, config: WindowConfig, title="Pygame Window", init_fullscreen=False, window_sizes: list[tuple[int, int]] | None = None) -> None:
-        super().__init__(config, title, init_fullscreen, window_sizes)
+    def __init__(self, config: WindowConfig) -> None:
+        super().__init__(config)
         # init display surface
         display_size = self.config.display_size if self.config.display_size else self._win_screen.get_size()
         self.__display = pygame.transform.scale_by(
             pygame.Surface(display_size), 1 / self.config.scale_factor
         )
-        print(self._win_screen)
 
     def render(self):
         """Render to the screen"""
