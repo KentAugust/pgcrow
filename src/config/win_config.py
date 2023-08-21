@@ -8,7 +8,7 @@ class WindowConfig:
     """Window configuration class"""
 
     window_size: tuple[int, int]
-    display_size: tuple[int, int]
+    display_size: tuple[int, int] | None = None
     scale_factor: float = 1.0
     target_fps: int = 0
     depth: int = 0

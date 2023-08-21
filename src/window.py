@@ -112,8 +112,9 @@ class WindowDisplay(Window):
     def __init__(self, config: WindowConfig, title="Pygame Window", init_fullscreen=False, window_sizes: list[tuple[int, int]] | None = None) -> None:
         super().__init__(config, title, init_fullscreen, window_sizes)
         # init display surface
+        display_size = self.config.display_size if self.config.display_size else self._win_screen.get_size()
         self.__display = pygame.transform.scale_by(
-            pygame.Surface(self.config.display_size), 1 / self.config.scale_factor
+            pygame.Surface(display_size), 1 / self.config.scale_factor
         )
         print(self._win_screen)
 
