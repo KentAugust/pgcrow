@@ -8,7 +8,7 @@ from .config import WindowConfig
 
 
 class Window:
-    """Window class"""
+    """Window class that blits on the screen"""
 
     def __init__(
         self,
@@ -38,18 +38,11 @@ class Window:
         )  # init window
         self.set_title(title)
 
-        # init display surface
-        self.display = pygame.transform.scale_by(
-            pygame.Surface(self.config.display_size), 1 / self.config.scale_factor
-        )
         self.clock: pygame.Clock = pygame.Clock()
 
     def render(self):
         """Render to the screen"""
 
-        self.__win_screen.blit(
-            pygame.transform.scale(self.display, self.__win_screen.get_size()), (0, 0)
-        )
         pygame.display.update()
         self.clock.tick(self.config.target_fps)
 
@@ -70,14 +63,14 @@ class Window:
         if size_option == 0:
             if self.config.can_fullscreen:
                 if not self.is_fullscreen:
-                    self.__win_screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+                    self._win_screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
                 self.is_fullscreen = not self.is_fullscreen
                 self.current_win_size = pygame.display.get_window_size()
             return
 
         self.is_fullscreen = False if self.is_fullscreen else False
 
-        self.__win_screen = pygame.display.set_mode(size)
+        self._win_screen = pygame.display.set_mode(size)
         self.current_win_size = pygame.display.get_window_size()
 
     def toggle_fullscreen(self):
@@ -107,3 +100,32 @@ class Window:
         """Quit pygame and exit"""
         pygame.quit()
         sys.exit()
+
+    @property
+    def display(self):
+        return self._win_screen
+
+
+class WindowDisplay(Window):
+    """Window class that blits on a intermediate display"""
+
+    def __init__(self, config: WindowConfig, title="Pygame Window", init_fullscreen=False, window_sizes: list[tuple[int, int]] | None = None) -> None:
+        super().__init__(config, title, init_fullscreen, window_sizes)
+        # init display surface
+        self.__display = pygame.transform.scale_by(
+            pygame.Surface(self.config.display_size), 1 / self.config.scale_factor
+        )
+        print(self._win_screen)
+
+    def render(self):
+        """Render to the screen"""
+
+        self._win_screen.blit(
+            pygame.transform.scale(self.__display, self._win_screen.get_size()), (0, 0)
+        )
+        pygame.display.update()
+        self.clock.tick(self.config.target_fps)
+
+    @property
+    def display(self):
+        return self.__display
