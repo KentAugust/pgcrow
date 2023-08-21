@@ -133,7 +133,7 @@ class WindowScreen(Window):
         return self._win_screen
 
 
-class WindowDisplay(Window):
+class WindowDisplay(WindowScreen):
     """Window class that blits on a intermediate display"""
 
     def __init__(self, config: WindowConfig) -> None:
