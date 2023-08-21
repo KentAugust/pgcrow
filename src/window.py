@@ -4,16 +4,43 @@ Window module for handling differents type of window"""
 import sys
 import pygame
 
+from typing import Protocol
+
 from .config import WindowConfig
 
 
-class Window:
+class Window(Protocol):
+    """Window Protocol"""
+
+    display: pygame.Surface
+    config: WindowConfig
+
+    def __init__(self, config: WindowConfig) -> None:
+        ...
+
+    def render(self):
+        """Render to the screen"""
+
+    def update_win_size(self, size_option: int):
+        """Update window size with if the option is avalible in disktop sizes"""
+
+    def toggle_fullscreen(self):
+        """Turn on/off fullscreen"""
+
+    def set_title(self, title="Pygame Window", icontitle: str | None = None):
+        """Set window title"""
+
+    def clean(self, bg_color: pygame.Color):
+        """fills the screen/display with the given color"""
+
+    def quit(self):
+        """Quit pygame and exit"""
+
+
+class WindowScreen(Window):
     """Window class that blits on the screen"""
 
-    def __init__(
-        self,
-        config: WindowConfig,
-    ) -> None:
+    def __init__(self, config: WindowConfig) -> None:
         self.config = config
         self.is_fullscreen = self.config.start_fullscreen and self.config.can_fullscreen
 
@@ -22,7 +49,8 @@ class Window:
 
         # init desktop sizes
         self.desktop_sizes = pygame.display.get_desktop_sizes()
-        self.config.avalible_window_sizes = self.config.avalible_window_sizes if self.config.avalible_window_sizes else []
+        if not self.config.avalible_window_sizes:
+            self.config.avalible_window_sizes = []
         for size in sorted(self.config.avalible_window_sizes, reverse=True):
             if self.config.window_size not in set(self.desktop_sizes):
                 self.desktop_sizes.append(size)
@@ -89,7 +117,7 @@ class Window:
             pygame.display.set_caption(title)
 
     def clean(self, bg_color: pygame.Color):
-        """fills the display with the given color"""
+        """fills the screen/display with the given color"""
 
         self.display.fill(bg_color)
 
@@ -100,6 +128,8 @@ class Window:
 
     @property
     def display(self):
+        """Returns the screen surface"""
+
         return self._win_screen
 
 
@@ -109,7 +139,9 @@ class WindowDisplay(Window):
     def __init__(self, config: WindowConfig) -> None:
         super().__init__(config)
         # init display surface
-        display_size = self.config.display_size if self.config.display_size else self._win_screen.get_size()
+        display_size = self.config.display_size
+        if not display_size:
+            display_size = self._win_screen.get_size()
         self.__display = pygame.transform.scale_by(
             pygame.Surface(display_size), 1 / self.config.scale_factor
         )
@@ -125,4 +157,6 @@ class WindowDisplay(Window):
 
     @property
     def display(self):
+        """Returns the display surface"""
+
         return self.__display
