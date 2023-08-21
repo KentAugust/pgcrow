@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pgcrow",
-    version="0.1.0",
+    version="0.2.0",
     description="Pygame framework for making simple games",
     author="KentAugust",
     author_email="kentaugustone@gmail.com",
