@@ -56,9 +56,34 @@ class Mouse:
                 # TODO <Event(1027-MouseWheel {'flipped': False, 'x': 0, 'y': 1, 'precise_x': 0.0, 'precise_y': 1.0, 'touch': False, 'window': None})>
                 pass
 
+    @staticmethod
+    def get_pos() -> tuple[int, int]:
+        return pygame.mouse.get_pos()
+
+    @staticmethod
+    def get_pos_scaled(screen_size: tuple[int, int], display_size: tuple[int, int]) -> tuple[float, float]:
+        mouse_pos = pygame.mouse.get_pos()
+        return mouse_pos[0]/screen_size[0] * display_size[0], mouse_pos[1]/screen_size[1] * display_size[1]
+
+    @staticmethod
+    def get_visible() -> bool:
+        return pygame.mouse.get_visible()
+
+    @staticmethod
+    def get_focused() -> bool:
+        return pygame.mouse.get_focused()
+
+    @staticmethod
+    def set_pos(pos: tuple[int, int]):
+        return pygame.mouse.set_pos(pos)
+
+    @staticmethod
+    def set_visible(visible: bool) -> int:
+        return pygame.mouse.set_visible(visible)
+
     def __getitem__(self, key: int) -> Button:
         return self.button(key)
-    
+
     def get_pressed(self) -> list[Button]:
         return [k for k in self.buttons.values() if k.pressed]
 
