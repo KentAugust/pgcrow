@@ -1,0 +1,105 @@
+"""## Mouse handling"""
+
+import pygame
+
+from typing import Optional, Any
+from dataclasses import dataclass
+from ..timers import Timer
+
+
+@dataclass
+class Button:
+    """Button dataclass"""
+
+    pos: tuple[int, int]
+    number: int
+    touch: str
+    window: Any
+    pressed: bool
+    start_time: float
+    start_frame: int
+    end_time: Optional[float]
+    end_frame: Optional[int]
+
+
+class Mouse:
+    """Class for handling mouse events"""
+
+    def __init__(self):
+        self.buttons = {}
+        self.timer = Timer()
+
+    def handle_event(self, event: pygame.event.Event) -> None:
+        match event.type:
+            case pygame.MOUSEBUTTONDOWN:
+                start_time = self.timer.seconds
+                start_frame = pygame.time.get_ticks()
+                self.buttons[event.button] = Button(
+                    pos = event.pos,
+                    number = event.button,
+                    touch = event.touch,
+                    window = event.window,
+                    pressed=True,
+                    start_time=start_time,
+                    start_frame=start_frame,
+                    end_time=None,
+                    end_frame=None,
+                )
+            case pygame.MOUSEBUTTONUP:
+                self.buttons[event.button].pressed = False
+                self.buttons[event.button].end_time = self.timer.seconds
+                self.buttons[event.button].end_frame = pygame.time.get_ticks()
+            case pygame.MOUSEMOTION:
+                # TODO <Event(1024-MouseMotion {'pos': (427, 152), 'rel': (0, 1), 'buttons': (0, 0, 0), 'touch': False, 'window': None})>
+                pass
+            case pygame.MOUSEWHEEL:
+                # TODO <Event(1027-MouseWheel {'flipped': False, 'x': 0, 'y': 1, 'precise_x': 0.0, 'precise_y': 1.0, 'touch': False, 'window': None})>
+                pass
+
+    def __getitem__(self, key: int) -> Button:
+        return self.button(key)
+    
+    def get_pressed(self) -> list[Button]:
+        return [k for k in self.buttons.values() if k.pressed]
+
+    def button(self, key: int) -> Optional[Button]:
+        return self.buttons[key] if key in self.buttons else None
+
+    def is_pressed(self, key: int) -> bool:
+        return k.pressed if (k := self.button(key)) else False
+
+    def press_time(self, key: int) -> Optional[float]:
+        return k.start_time if (k := self.button(key)) else None
+
+    def press_frame(self, key: int) -> Optional[int]:
+        return k.start_frame if (k := self.button(key)) else None
+
+    def frames_since_press(self, key: int) -> Optional[int]:
+        return pygame.time.get_ticks() - k.start_frame if (k := self.button(key)) else None
+
+    def pressed_this_frame(self, key: int) -> bool:
+        return self.frames_since_press(key) == 0
+
+    def is_held(self, key: int) -> bool:
+        return k.pressed if (k := self.button(key)) else False
+
+    def hold_time(self, key: int) -> Optional[float]:
+        return self.timer.seconds - k.start_time if (k := self.button(key)) else None
+
+    def hold_frames(self, key: int) -> Optional[int]:
+        return pygame.time.get_ticks() - k.start_frame if (k := self.button(key)) else None
+
+    def release_time(self, key: int) -> Optional[float]:
+        return k.end_time if (k := self.button(key)) else None
+
+    def time_since_release(self, key: int) -> Optional[float]:
+        return self.timer.seconds - t if (t := self.release_time(key)) else None
+
+    def release_frame(self, key: int) -> Optional[int]:
+        return k.end_frame if (k := self.button(key)) else None
+
+    def frames_since_release(self, key: int) -> Optional[int]:
+        return pygame.time.get_ticks() - t if (t := self.release_frame(key)) else None
+
+    def released_this_frame(self, key: int) -> bool:
+        return self.frames_since_release(key) == 0
