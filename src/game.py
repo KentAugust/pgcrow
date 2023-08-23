@@ -1,11 +1,10 @@
 """## Game"""
 
 from .event_handler import EventHandler
-from .scene_2d import Scene2D
 from .inputs import Keyboard, Mouse
 from .timers import Deltatimer
 from .window import Window
-from .config import CallableScene
+from .config import CallableScene, Scene2D
 
 
 class Game:
