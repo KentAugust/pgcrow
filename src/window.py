@@ -42,8 +42,7 @@ class WindowScreen(Window):
 
     def __init__(self, config: WindowConfig) -> None:
         self.config = config
-        self.is_fullscreen = self.config.start_fullscreen and self.config.can_fullscreen
-
+        self.is_fullscreen = False
         if not pygame.get_init():
             pygame.init()
 
@@ -62,6 +61,8 @@ class WindowScreen(Window):
         self.update_win_size(
             self.desktop_sizes.index(self.config.window_size)
         )  # init window
+        if self.config.start_fullscreen and self.config.can_fullscreen:
+            self.toggle_fullscreen()
         self.set_title(self.config.title)
 
         self.clock: pygame.Clock = pygame.Clock()
