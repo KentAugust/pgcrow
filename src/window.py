@@ -56,8 +56,9 @@ class WindowScreen(Window):
                 self.desktop_sizes.append(size)
         if self.config.window_size not in set(self.desktop_sizes):
             self.desktop_sizes.append(self.config.window_size)
-        self.desktop_sizes = tuple(self.desktop_sizes)
+        self.desktop_sizes = tuple(sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True))
 
+        self._win_screen = None
         self.update_win_size(
             self.desktop_sizes.index(self.config.window_size)
         )  # init window
@@ -85,18 +86,26 @@ class WindowScreen(Window):
         except pygame.error:
             size = self.config.window_size
 
+
         if size_option == 0:
+            try:
+                self._prev_size = pygame.display.get_window_size()
+            except pygame.error:
+                self._prev_size = size
             if self.config.can_fullscreen:
                 if not self.is_fullscreen:
                     self._win_screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+
                 self.is_fullscreen = not self.is_fullscreen
                 self.current_win_size = pygame.display.get_window_size()
             return
 
+        if self.config.can_resize or self.is_fullscreen or self._win_screen == None:
+            if self.is_fullscreen and not self.config.can_resize:
+                size = self._prev_size
+            self._win_screen = pygame.display.set_mode(size)
+            self.current_win_size = pygame.display.get_window_size()
         self.is_fullscreen = False if self.is_fullscreen else False
-
-        self._win_screen = pygame.display.set_mode(size)
-        self.current_win_size = pygame.display.get_window_size()
 
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
@@ -104,7 +113,7 @@ class WindowScreen(Window):
         if not self.is_fullscreen:
             self.update_win_size(0)
         else:
-            option = self.desktop_sizes.index(self.config.window_size)
+            option = self.desktop_sizes.index(self._prev_size)
             self.update_win_size(option)
             return
 
