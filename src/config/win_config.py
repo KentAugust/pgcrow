@@ -12,6 +12,7 @@ class WindowConfig:
     scale_factor: float = 1.0
     avalible_window_sizes: list[tuple[int, int]] | None = None
     title: str = "Pygame Window"
+    clean_color: tuple[int, int, int] = (0, 0, 0)
     target_fps: int = 0
     depth: int = 0
     vsync: int = 0

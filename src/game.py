@@ -34,7 +34,7 @@ class Game:
 
         while True:
             dt = self.deltatimer.get_dt()
-            self.window.clean((0, 0, 0))
+            self.window.clean(self.window.config.clean_color)
             self.event_handler.loop(self.window, self.keyboard, self.mouse)
             self.actual_scene.update(dt)
             self.actual_scene.render()
