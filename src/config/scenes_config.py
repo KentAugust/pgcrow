@@ -1,9 +1,17 @@
 """Scenes config for game scenes"""
 
-from typing import NamedTuple, Any, Protocol
+from typing import NamedTuple, Any
+from abc import ABC
 
 
-class Scene2D(Protocol):
+Game = NamedTuple("Game", [("window", "Any")])
+
+
+class Scene2D(ABC):
+    """Abstract Class representing a single game scene"""
+
+    def __init__(self, game: Game) -> None:
+        ...
 
     def update(self, dt: float):
         """For updating stuff"""
