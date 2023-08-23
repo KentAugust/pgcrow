@@ -1,9 +1,8 @@
 """Library gate"""
 
-from . import config
-from . import window
-from . import event_handler
-from . import timers
-from . import inputs
-from . import game
-from . import scene_2d
+from . import ( config, window, timers, inputs )
+
+from .window import Window, WindowScreen, WindowDisplay
+from .event_handler import EventHandler
+from .game import Game
+from .scene_2d import Scene2D
