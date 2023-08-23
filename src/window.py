@@ -51,7 +51,7 @@ class WindowScreen(Window):
         if not self.config.avalible_window_sizes:
             self.config.avalible_window_sizes = []
         for size in sorted(self.config.avalible_window_sizes, reverse=True):
-            if self.config.window_size not in set(self.desktop_sizes):
+            if size not in set(self.desktop_sizes):
                 self.desktop_sizes.append(size)
         if self.config.window_size not in set(self.desktop_sizes):
             self.desktop_sizes.append(self.config.window_size)
@@ -61,6 +61,8 @@ class WindowScreen(Window):
         self.update_win_size(
             self.desktop_sizes.index(self.config.window_size)
         )  # init window
+
+        self.is_fullscreen = self.desktop_sizes.index(self.config.window_size) == 0
         if self.config.start_fullscreen and self.config.can_fullscreen:
             self.toggle_fullscreen()
         self.set_title(self.config.title)
