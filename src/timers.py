@@ -37,7 +37,6 @@ class Deltatimer:
     def __init__(self) -> None:
         self.__dt = 0
         self.__prev_time = time.time()
-        super().__init__()
 
     def get_dt(self) -> float:
         """Get deltatime in seconds"""
@@ -52,8 +51,8 @@ class Deltatimer:
         return self.__dt
 
 
-class Cronometer:
-    """Cronometer for counting"""
+class chronometer:
+    """chronometer for counting"""
 
     def __init__(self) -> None:
         self.__current_time = 0
