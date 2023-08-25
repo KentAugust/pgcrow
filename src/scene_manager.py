@@ -19,8 +19,27 @@ class SceneManager:
         if initial is None:
             initial = CallableScene(Scene2D, {"game": game})
 
+        self._actual_scene = None
+        self._run_exit = False
+        self._run_enter = False
         self.add_scene(initial_name, initial)
         self.change_scene(initial_name)
+    
+    def update(self, dt):
+        """Update current scene"""
+
+        self._actual_scene.update(dt)
+        self._update_transtion(dt)
+
+    def _update_transtion(self, dt):
+        """Update the current scene transition"""
+
+        if self._run_exit:
+            if self._actual_scene.on_exit(dt):
+                self._init_scene()
+        if self._run_enter:
+            if self._actual_scene.on_enter(dt):
+                self._run_enter = False
 
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
@@ -37,11 +56,20 @@ class SceneManager:
         """Method to change scenes if name is avalible in scenes"""
 
         if name in self._scenes:
-            self._actual_scene: Scene2D = self._scenes[name].scene_class(
-                **self._scenes[name].kwargs
-            )
-            self._actual_scene.set_scene_manager(self)
-            self._actual_scene_name = name
+            self._next_scene = name
+            if not self._actual_scene:
+                self._init_scene()
+            else:
+                self._run_exit = True
+
+    def _init_scene(self):
+        self._actual_scene: Scene2D = self._scenes[self._next_scene].scene_class(
+            **self._scenes[self._next_scene].kwargs
+        )
+        self._run_enter = True
+        self._run_exit = False
+        self._actual_scene.set_scene_manager(self)
+        self._actual_scene_name = self._next_scene
 
     def scenes_names(self) -> set:
         "Get all scenes names"
