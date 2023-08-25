@@ -51,7 +51,7 @@ class Deltatimer:
         return self.__dt
 
 
-class chronometer:
+class Chronometer:
     """chronometer for counting"""
 
     def __init__(self) -> None:
