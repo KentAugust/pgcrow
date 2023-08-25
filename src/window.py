@@ -4,40 +4,10 @@ Window module for handling differents type of window"""
 import sys
 import pygame
 
-from typing import Protocol
-
 from .config import WindowConfig
 
 
-class Window(Protocol):
-    """Window Protocol"""
-
-    display: pygame.Surface
-    config: WindowConfig
-
-    def __init__(self, config: WindowConfig) -> None:
-        ...
-
-    def render(self):
-        """Render to the screen"""
-
-    def update_win_size(self, size_option: int):
-        """Update window size with if the option is avalible in disktop sizes"""
-
-    def toggle_fullscreen(self):
-        """Turn on/off fullscreen"""
-
-    def set_title(self, title="Pygame Window", icontitle: str | None = None):
-        """Set window title"""
-
-    def clean(self, bg_color: pygame.Color):
-        """fills the screen/display with the given color"""
-
-    def quit(self):
-        """Quit pygame and exit"""
-
-
-class WindowScreen(Window):
+class WindowScreen:
     """Window class that blits on the screen"""
 
     def __init__(self, config: WindowConfig) -> None:

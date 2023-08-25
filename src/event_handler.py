@@ -3,7 +3,7 @@
 import pygame
 
 from .inputs import Keyboard, Mouse
-from .window import Window
+from .config import Window
 
 
 class EventHandler:

@@ -3,8 +3,7 @@
 from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
 from .timers import Deltatimer
-from .window import Window
-from .config import CallableScene, Scene2D
+from .config import Window, CallableScene, Scene2D
 
 
 class Game:

@@ -2,7 +2,7 @@
 
 import pygame
 
-from .game import Game
+from .config import Game
 
 
 class Scene2D:
