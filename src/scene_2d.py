@@ -2,7 +2,7 @@
 
 import pygame
 
-from .config import Game
+from .config import Game, SceneManager
 
 
 class Scene2D:
@@ -10,6 +10,12 @@ class Scene2D:
 
     def __init__(self, game: Game) -> None:
         self.game = game
+        self.scene_manager = None
+
+    def set_scene_manager(self, scene_manager: SceneManager):
+        """Set scene manager"""
+
+        self.scene_manager = scene_manager
 
     def update(self, dt: float):
         """For updating stuff"""
