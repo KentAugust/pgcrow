@@ -73,6 +73,9 @@ class Game(Protocol):
 class SceneManager(Protocol):
     """Class for hanglind scenes"""
 
+    actual_scene: "Scene2D"
+    actual_scene_name: str
+
     def __init__(
         self, game: Game, initial_scene: CallableScene, initial_scene_name: str
     ) -> None:
@@ -86,6 +89,9 @@ class SceneManager(Protocol):
 
     def change_scene(self, name: str):
         """Method to change scenes if name is avalible in scenes"""
+
+    def scenes_names(self) -> set:
+        "Get all scenes names"
 
 
 class Scene2D(Protocol):

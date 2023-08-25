@@ -14,7 +14,7 @@ class SceneManager:
         initial: CallableScene | None = None,
     ):
         self.game = game
-        self.scenes = {}
+        self._scenes = {}
 
         if initial is None:
             initial = CallableScene(Scene2D, {"game": game})
@@ -25,19 +25,33 @@ class SceneManager:
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
 
-        self.scenes[name] = scene
+        self._scenes[name] = scene
 
     def remove_scene(self, name: str):
         """Removes scene from scenes"""
 
-        if name in self.scenes:
-            del self.scenes[name]
+        if name in self._scenes:
+            del self._scenes[name]
 
     def change_scene(self, name: str):
         """Method to change scenes if name is avalible in scenes"""
 
-        if name in self.scenes:
-            self.actual_scene: Scene2D = self.scenes[name].scene_class(
-                **self.scenes[name].kwargs
+        if name in self._scenes:
+            self._actual_scene: Scene2D = self._scenes[name].scene_class(
+                **self._scenes[name].kwargs
             )
-            self.actual_scene.set_scene_manager(self)
+            self._actual_scene.set_scene_manager(self)
+            self._actual_scene_name = name
+
+    def scenes_names(self) -> set:
+        "Get all scenes names"
+
+        return set(self._scenes.keys())
+
+    @property
+    def actual_scene(self) -> Scene2D:
+        return self._actual_scene
+
+    @property
+    def actual_scene_name(self) -> str:
+        return self._actual_scene_name
