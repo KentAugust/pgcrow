@@ -1,7 +1,7 @@
 """Scene Manager"""
 
+from .config import CallableScene, Game
 from .scene_2d import Scene2D
-from .config import Game, CallableScene
 
 
 class SceneManager:

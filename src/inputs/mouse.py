@@ -1,9 +1,10 @@
 """## Mouse handling"""
 
+from dataclasses import dataclass
+from typing import Any, Optional
+
 import pygame
 
-from typing import Optional, Any
-from dataclasses import dataclass
 from ..timers import Timer
 
 

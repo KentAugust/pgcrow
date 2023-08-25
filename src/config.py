@@ -1,10 +1,10 @@
 """Config
 module for setting different type of configuration needed for other classes"""
 
-import pygame
-
 from dataclasses import dataclass
-from typing import NamedTuple, Any, Protocol
+from typing import Any, NamedTuple, Protocol
+
+import pygame
 
 
 @dataclass

@@ -1,6 +1,7 @@
 """Math module"""
 
 import math
+
 import pygame
 
 

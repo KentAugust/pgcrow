@@ -2,8 +2,8 @@
 
 import pygame
 
-from .inputs import Keyboard, Mouse
 from .config import Window
+from .inputs import Keyboard, Mouse
 
 
 class EventHandler:

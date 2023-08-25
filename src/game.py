@@ -1,10 +1,10 @@
 """## Game"""
 
+from .config import Window
 from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
-from .timers import Deltatimer
 from .scene_manager import SceneManager
-from .config import Window
+from .timers import Deltatimer
 
 
 class Game:

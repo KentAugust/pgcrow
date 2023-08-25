@@ -1,9 +1,8 @@
 """Library gate"""
 
-from . import config, window, timers, inputs, maths
-
-from .window import WindowScreen, WindowDisplay
+from . import config, inputs, maths, timers, window
 from .event_handler import EventHandler
-from .scene_manager import SceneManager
 from .game import Game
 from .scene_2d import Scene2D
+from .scene_manager import SceneManager
+from .window import WindowDisplay, WindowScreen

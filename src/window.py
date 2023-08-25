@@ -2,6 +2,7 @@
 Window module for handling differents type of window"""
 
 import sys
+
 import pygame
 
 from .config import WindowConfig

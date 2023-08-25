@@ -3,6 +3,7 @@ It uses display_size and scale_factor in the config object
 """
 
 import pygame
+
 import pgcrow
 
 

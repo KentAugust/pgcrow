@@ -1,9 +1,10 @@
 """## Keyboard handling"""
 
+from dataclasses import dataclass
+from typing import Optional
+
 import pygame
 
-from typing import Optional
-from dataclasses import dataclass
 from ..timers import Timer
 
 
