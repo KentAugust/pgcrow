@@ -17,6 +17,16 @@ class Scene2D:
 
         self.scene_manager = scene_manager
 
+    def on_enter(self, dt) -> bool:
+        """Ativate when enter the scene and return True when finish"""
+
+        return True
+
+    def on_exit(self, dt) -> bool:
+        """Ativate when exit the scene and return True when finish"""
+
+        return True
+
     def update(self, dt: float):
         """For updating stuff"""
         if self.game.keyboard.pressed_this_frame(pygame.K_F11):

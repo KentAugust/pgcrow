@@ -81,6 +81,9 @@ class SceneManager(Protocol):
     ) -> None:
         ...
 
+    def update(self, dt: float):
+        """Update current scene"""
+
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
 
@@ -101,6 +104,12 @@ class Scene2D(Protocol):
 
     def __init__(self, game: Game) -> None:
         ...
+
+    def on_enter(self, dt) -> bool:
+        """Ativate when enter the scene and return True when finish"""
+
+    def on_exit(self, dt) -> bool:
+        """Ativate when exit the scene and return True when finish"""
 
     def set_scene_manager(self, scene_manager: SceneManager):
         """Set scene manager"""
