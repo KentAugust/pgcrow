@@ -1,6 +1,6 @@
 """Library gate"""
 
-from . import config, window, timers, inputs
+from . import config, window, timers, inputs, maths
 
 from .window import WindowScreen, WindowDisplay
 from .event_handler import EventHandler
