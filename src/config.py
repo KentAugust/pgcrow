@@ -5,7 +5,6 @@ import pygame
 
 from dataclasses import dataclass
 from typing import NamedTuple, Any, Protocol
-from abc import ABC
 
 
 @dataclass
@@ -63,19 +62,33 @@ class Game(Protocol):
     """General class that represent the game"""
 
     window: Window
-    scenes: dict[str, CallableScene]
 
     def __init__(self, window: Window) -> None:
         ...
-
-    def change_scene(self, name: str):
-        """Method to change scenes if name is avalible in scenes"""
 
     def run(self):
         """Run the main game loop"""
 
 
-class Scene2D(ABC):
+class SceneManager(Protocol):
+    """Class for hanglind scenes"""
+
+    def __init__(
+        self, game: Game, initial_scene: CallableScene, initial_scene_name: str
+    ) -> None:
+        ...
+
+    def add_scene(self, name: str, scene: CallableScene):
+        """Adds new scene to scenes"""
+
+    def remove_scene(self, name: str):
+        """Removes scene from scenes"""
+
+    def change_scene(self, name: str):
+        """Method to change scenes if name is avalible in scenes"""
+
+
+class Scene2D(Protocol):
     """Abstract Class representing a single game scene"""
 
     game: Game
@@ -83,11 +96,11 @@ class Scene2D(ABC):
     def __init__(self, game: Game) -> None:
         ...
 
+    def set_scene_manager(self, scene_manager: SceneManager):
+        """Set scene manager"""
+
     def update(self, dt: float):
         """For updating stuff"""
 
     def render(self):
         """For rendering stuff"""
-
-
-
