@@ -74,7 +74,7 @@ class WindowScreen:
                 self.current_win_size = pygame.display.get_window_size()
             return
 
-        if self.config.can_resize or self.is_fullscreen or self._win_screen == None:
+        if self.config.can_resize or self.is_fullscreen or self._win_screen is None:
             if self.is_fullscreen and not self.config.can_resize:
                 size = self._prev_size
             self._win_screen = pygame.display.set_mode(size)

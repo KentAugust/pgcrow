@@ -29,13 +29,15 @@ def rad_to_deg(angle: float) -> float:
 
 def angle_to_direction(angle: float) -> Vec2:
     """Transform an angle in radians to a vector
-    (Note that due to pygame's inverted y coordinate system, the rotation will look clockwise if displayed).
+    (Note that due to pygame's inverted y coordinate system, the rotation will look clockwise
+    if displayed).
     """
     return Vec2(math.cos(angle), math.sin(angle))
 
 
 def direction_to_angle(vec: Vec2) -> float:
     """Transform a vector to an angle in radians
-    (Note that due to pygame's inverted y coordinate system, the rotation will look clockwise if displayed).
+    (Note that due to pygame's inverted y coordinate system, the rotation will look clockwise
+    if displayed).
     """
     return math.atan2(vec.y, vec.x)

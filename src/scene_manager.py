@@ -20,11 +20,12 @@ class SceneManager:
             initial = CallableScene(Scene2D, {"game": game})
 
         self._actual_scene = None
+        self._actual_scene_name = None
         self._run_exit = False
         self._run_enter = False
         self.add_scene(initial_name, initial)
         self.change_scene(initial_name)
-    
+
     def update(self, dt):
         """Update current scene"""
 
@@ -78,8 +79,10 @@ class SceneManager:
 
     @property
     def actual_scene(self) -> Scene2D:
+        """Get a Scene2D object"""
         return self._actual_scene
 
     @property
     def actual_scene_name(self) -> str:
+        """Get the name of the actual scene"""
         return self._actual_scene_name

@@ -17,12 +17,12 @@ class Scene2D:
 
         self.scene_manager = scene_manager
 
-    def on_enter(self, dt) -> bool:
+    def on_enter(self, dt: float) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
         return True
 
-    def on_exit(self, dt) -> bool:
+    def on_exit(self, dt: float) -> bool:
         """Ativate when exit the scene and return True when finish"""
 
         return True
