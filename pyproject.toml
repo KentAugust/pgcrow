@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pgcrow"
-version = "0.3.0"
+version = "0.4.0"
 description = "Pygame framework"
 authors = ["KentAugust <kentaugustone@gmail.com>"]
 readme = "README.md"
