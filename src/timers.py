@@ -3,7 +3,7 @@
 import time
 
 
-class Timer:
+class TimeClock:
     """Basic timer"""
 
     def __init__(self) -> None:
@@ -31,7 +31,7 @@ class Timer:
         return self.__time // 3600
 
 
-class Deltatimer:
+class Delta:
     """Timer for deltatime"""
 
     def __init__(self) -> None:
@@ -46,7 +46,7 @@ class Deltatimer:
         return self.__dt
 
     @property
-    def dt(self) -> float:
+    def deltatime(self) -> float:
         """Returns deltatime"""
         return self.__dt
 
