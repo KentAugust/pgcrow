@@ -12,17 +12,22 @@ class WindowConfig:
     """Window configuration class"""
 
     window_size: tuple[int, int]
-    display_size: tuple[int, int] | None = None
     scale_factor: float = 1.0
     avalible_window_sizes: list[tuple[int, int]] | None = None
+    depth: int = 0
+    vsync: int = 0
+    can_fullscreen: bool = True
+    can_resize: bool = True
+
+
+@dataclass
+class GameConfig:
+    """Game configuration class"""
+
     title: str = "Pygame Window"
     clean_color: tuple[int, int, int] = (0, 0, 0)
     target_fps: int = 0
-    depth: int = 0
-    vsync: int = 0
     start_fullscreen: bool = False
-    can_fullscreen: bool = True
-    can_resize: bool = True
 
 
 class Window(Protocol):
@@ -43,31 +48,34 @@ class Window(Protocol):
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
 
-    def set_title(self, title="Pygame Window", icontitle: str | None = None):
-        """Set window title"""
-
     def clean(self, bg_color: pygame.Color):
         """fills the screen/display with the given color"""
-
-    def quit(self):
-        """Quit pygame and exit"""
-
-
-CallableScene = NamedTuple(
-    "CallableScene", [("scene_class", "Scene2D"), ("kwargs", "dict[str, Any]")]
-)
 
 
 class Game(Protocol):
     """General class that represent the game"""
 
+    config: GameConfig
     window: Window
 
-    def __init__(self, window: Window) -> None:
+    def __init__(self, config: GameConfig, window: Window) -> None:
         ...
 
     def run(self):
         """Run the main game loop"""
+
+    def set_title(self, title="Pygame Window", icontitle: str | None = None):
+        """Set window title"""
+
+    def quit(self):
+        """Quit pygame and exit"""
+
+
+class CallableScene(NamedTuple):
+    """Class to store a scene class and its arguments"""
+
+    scene_class: "Scene2D"
+    kwargs: dict[str, Any]
 
 
 class SceneManager(Protocol):
