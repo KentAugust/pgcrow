@@ -8,7 +8,7 @@ from .config import GameConfig, Window
 from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
 from .scene_manager import SceneManager
-from .timers import Deltatimer
+from .timers import Delta
 
 
 class Game:
@@ -31,7 +31,7 @@ class Game:
         self.event_handler = EventHandler(self)
         self.scene_manager = SceneManager(self)  # set main as an empty scene
         self.clock = pygame.Clock()
-        self.deltatimer = Deltatimer()
+        self.deltatimer = Delta()
 
     def run(self):
         """Run the main game loop"""

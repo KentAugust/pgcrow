@@ -5,7 +5,7 @@ from typing import Any, Optional
 
 import pygame
 
-from ..timers import Timer
+from ..timers import TimeClock
 
 
 @dataclass
@@ -28,7 +28,7 @@ class Mouse:
 
     def __init__(self):
         self.buttons = {}
-        self.timer = Timer()
+        self.timer = TimeClock()
 
     def handle_event(self, event: pygame.event.Event) -> None:
         match event.type:

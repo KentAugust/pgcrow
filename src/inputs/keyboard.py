@@ -5,7 +5,7 @@ from typing import Optional
 
 import pygame
 
-from ..timers import Timer
+from ..timers import TimeClock
 
 
 @dataclass
@@ -26,7 +26,7 @@ class Keyboard:
 
     def __init__(self):
         self.keys = {}
-        self.timer = Timer()
+        self.timer = TimeClock()
 
     def handle_event(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN:
