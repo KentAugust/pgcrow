@@ -25,9 +25,9 @@ class GameConfig:
     """Game configuration class"""
 
     title: str = "Pygame Window"
-    clean_color: tuple[int, int, int] = (0, 0, 0)
     target_fps: int = 0
     start_fullscreen: bool = False
+    clean_color: tuple[int, int, int] = (0, 0, 0)
 
 
 class Window(Protocol):
@@ -39,7 +39,7 @@ class Window(Protocol):
     def __init__(self, config: WindowConfig) -> None:
         ...
 
-    def render(self):
+    def update_display(self):
         """Render to the screen"""
 
     def update_win_size(self, size_option: int):
@@ -57,6 +57,7 @@ class Game(Protocol):
 
     config: GameConfig
     window: Window
+    clock: pygame.Clock
 
     def __init__(self, config: GameConfig, window: Window) -> None:
         ...

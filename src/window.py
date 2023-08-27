@@ -1,8 +1,6 @@
 """## Window
 Window module for handling differents type of window"""
 
-import sys
-
 import pygame
 
 from .config import WindowConfig
@@ -26,7 +24,9 @@ class WindowScreen:
                 self.desktop_sizes.append(size)
         if self.config.window_size not in set(self.desktop_sizes):
             self.desktop_sizes.append(self.config.window_size)
-        self.desktop_sizes = tuple(sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True))
+        self.desktop_sizes = tuple(
+            sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True)
+        )
 
         self._win_screen = None
         self.update_win_size(
@@ -34,17 +34,11 @@ class WindowScreen:
         )  # init window
 
         self.is_fullscreen = self.desktop_sizes.index(self.config.window_size) == 0
-        if self.config.start_fullscreen and self.config.can_fullscreen:
-            self.toggle_fullscreen()
-        self.set_title(self.config.title)
 
-        self.clock: pygame.Clock = pygame.Clock()
-
-    def render(self):
+    def update_display(self):
         """Render to the screen"""
 
         pygame.display.update()
-        self.clock.tick(self.config.target_fps)
 
     def update_win_size(self, size_option: int):
         """Update window size with if the option is avalible in disktop sizes"""
@@ -59,7 +53,6 @@ class WindowScreen:
                 return
         except pygame.error:
             size = self.config.window_size
-
 
         if size_option == 0:
             try:
@@ -91,23 +84,10 @@ class WindowScreen:
             self.update_win_size(option)
             return
 
-    def set_title(self, title="Pygame Window", icontitle: str | None = None):
-        """Set window title"""
-
-        if icontitle:
-            pygame.display.set_caption(title, icontitle)
-        else:
-            pygame.display.set_caption(title)
-
     def clean(self, bg_color: pygame.Color):
         """fills the screen/display with the given color"""
 
         self.display.fill(bg_color)
-
-    def quit(self):
-        """Quit pygame and exit"""
-        pygame.quit()
-        sys.exit()
 
     @property
     def display(self):
@@ -122,21 +102,18 @@ class WindowDisplay(WindowScreen):
     def __init__(self, config: WindowConfig) -> None:
         super().__init__(config)
         # init display surface
-        display_size = self.config.display_size
-        if not display_size:
-            display_size = self._win_screen.get_size()
+        display_size = self._win_screen.get_size()
         self.__display = pygame.transform.scale_by(
             pygame.Surface(display_size), 1 / self.config.scale_factor
         )
 
-    def render(self):
+    def update_display(self):
         """Render to the screen"""
 
         self._win_screen.blit(
             pygame.transform.scale(self.__display, self._win_screen.get_size()), (0, 0)
         )
         pygame.display.update()
-        self.clock.tick(self.config.target_fps)
 
     @property
     def display(self):
