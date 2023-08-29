@@ -16,13 +16,12 @@ python -m pgcrow.examples.example_name
 In a python file:
 ```python
 # import the example class
-
-from pgcrow.example.example_name import example_class
+from pgcrow.examples.example_name import example_class
 
 example_class().run()
 ```
 
-See all [examples](https://github.com/KentAugust/pycrow/tree/main/examples).
+See all [examples](examples).
 ## Notes:
 - Mouse for now only handles MOUSEBUTTONDOWN and MOUSEBUTTONUP events.
 
