@@ -1,6 +1,7 @@
 """Library gate"""
 
-from . import config, inputs, maths, timers, window
+from . import config, consts, inputs, maths, timers, window
+from .consts import *
 from .event_handler import EventHandler
 from .game import Game
 from .scene_2d import Scene2D

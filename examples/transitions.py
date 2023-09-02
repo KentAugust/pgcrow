@@ -1,6 +1,6 @@
 import pygame
-import pgcrow
 
+import pgcrow
 
 
 class SceneOne(pgcrow.Scene2D):
