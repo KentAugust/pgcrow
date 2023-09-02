@@ -24,7 +24,7 @@ def deg_to_rad(angle: float) -> float:
 
 def rad_to_deg(angle: float) -> float:
     """Converts angles from radians to degrees"""
-    return (angle * 360) / (2 * math.pi)
+    return (angle * 180) / math.pi
 
 
 def angle_to_direction(angle: float) -> Vec2:
