@@ -6,13 +6,16 @@ from typing import Any, NamedTuple, Protocol
 
 import pygame
 
+from .consts import ScaleFuntions
+
 
 @dataclass
-class WindowConfig:
+class WindowConfig: # pylint: disable=R0902
     """Window configuration class"""
 
     window_size: tuple[int, int]
     scale_factor: float = 1.0
+    scale_funtion: ScaleFuntions = ScaleFuntions.NEAREST
     avalible_window_sizes: list[tuple[int, int]] | None = None
     depth: int = 0
     vsync: int = 0
