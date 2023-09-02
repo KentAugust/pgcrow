@@ -23,7 +23,6 @@ example_class().run()
 
 See all [examples](examples).
 ## Notes:
-- Mouse for now only handles MOUSEBUTTONDOWN and MOUSEBUTTONUP events.
 
 ## Contributions:
 Feel free to make pull requests, changes suggestions and comments.
