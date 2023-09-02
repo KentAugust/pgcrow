@@ -34,12 +34,26 @@ class Motion:
     window: Any
 
 
+@dataclass
+class Wheel:
+    """Wheel dataclass"""
+
+    flipped:bool
+    x: int
+    y: int
+    precise_x: float
+    precise_y: float
+    touch: bool
+    window: None
+
+
 class Mouse:
     """Class for handling mouse events"""
 
     def __init__(self):
         self.buttons: dict[int, Button] = {}
         self.motion: Motion | None = None
+        self.wheel: Wheel | None = None
         self.timer = TimeClock()
 
     def handle_event(self, event: pygame.event.Event) -> None:
@@ -65,8 +79,7 @@ class Mouse:
             case pygame.MOUSEMOTION:
                 self.motion = Motion(event.pos, event.rel, event.buttons, event.touch, event.window)
             case pygame.MOUSEWHEEL:
-                # TODO <Event(1027-MouseWheel {'flipped': False, 'x': 0, 'y': 1, 'precise_x': 0.0, 'precise_y': 1.0, 'touch': False, 'window': None})>
-                pass
+                self.wheel = Wheel(event.flipped, event.x, event.y, event.precise_x, event.precise_y, event.touch, event.window)
 
     @staticmethod
     def get_pos() -> tuple[int, int]:
