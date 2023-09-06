@@ -9,15 +9,15 @@ class SpriteSheet:
     def __init__(
         self,
         img: pygame.Surface,
-        _h_frames: int = 1,
-        _v_frames: int = 1,
+        horizontal_frames: int = 1,
+        vertical_frames: int = 1,
         frame: tuple[int, int] = (0, 0),
     ) -> None:
         self._img = img
 
         # number of frames horizontally and vertically
-        self._h_frames = max(1, min(abs(_h_frames), self._img.get_width()))
-        self._v_frames = max(1, min(abs(_v_frames), self._img.get_height()))
+        self._h_frames = max(1, min(abs(horizontal_frames), self._img.get_width()))
+        self._v_frames = max(1, min(abs(vertical_frames), self._img.get_height()))
 
         # frame size
         self._frame_widht = self._img.get_width() // self._h_frames
