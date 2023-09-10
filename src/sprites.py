@@ -1,4 +1,4 @@
-"""Sprite sheet module"""
+"""Sprites module"""
 
 import pygame
 
@@ -94,7 +94,7 @@ class SpriteSheet:
     def vertical_len(self) -> int:
         """Return number of vertical frames"""
         return self._v_frames
-    
+
     def __len__(self) -> int:
         """Return number of total frames"""
         return self._total_frames
@@ -104,6 +104,30 @@ class SpriteSheet:
         return self._img.subsurface(
             (key[0] % self._h_frames) * self._frame_widht,
             (key[1] % self._v_frames) * self._frame_height,
+            self._frame_widht,
+            self._frame_height,
+        )
+
+
+class TileSet(SpriteSheet):
+    """Class to handle tilesets"""
+
+    def __init__(self, img: pygame.Surface, tile_size: int) -> None:
+        super().__init__(
+            img, img.get_width() // tile_size, img.get_height() // tile_size
+        )
+        self._tiles_cords = []
+        for vertical in range(self._v_frames):
+            for horizontal in range(self._h_frames):
+                cord = (horizontal, vertical)
+                self._tiles_cords.append(cord)
+
+    def __getitem__(self, key: int):
+        """Return currente frame image"""
+        cord = self._tiles_cords[key]
+        return self._img.subsurface(
+            cord[0] * self._frame_widht,
+            cord[1] * self._frame_height,
             self._frame_widht,
             self._frame_height,
         )
