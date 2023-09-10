@@ -70,3 +70,11 @@ class SpriteSheet:
     def vertical_frames(self) -> int:
         """Return number of vertical frames"""
         return self._v_frames
+
+    def __getitem__(self, key: tuple[int, int]):
+        return self._img.subsurface(
+            (key[0] % self._h_frames) * self._frame_widht,
+            (key[1] % self._v_frames) * self._frame_height,
+            self._frame_widht,
+            self._frame_height,
+        )
