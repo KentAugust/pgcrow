@@ -120,7 +120,26 @@ class TileSet(SpriteSheet):
         for vertical in range(self._v_frames):
             for horizontal in range(self._h_frames):
                 cord = (horizontal, vertical)
+
+                # check is the tile is empty
+                if self._is_empty(
+                    self._img.subsurface(
+                        cord[0] * self._frame_widht,
+                        cord[1] * self._frame_height,
+                        self._frame_widht,
+                        self._frame_height,
+                    )
+                ):
+                    continue
                 self._tiles_cords.append(cord)
+
+    def _is_empty(self, surf: pygame.Surface) -> bool:
+        """Check if the tile is completly transparent"""
+        for row in range(surf.get_height()):
+            for col in range(surf.get_width()):
+                if surf.get_at((col, row)).a != 0:
+                    return False
+        return True
 
     def __getitem__(self, key: int):
         """Return currente frame image"""
