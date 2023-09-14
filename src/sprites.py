@@ -3,6 +3,39 @@
 import pygame
 
 
+def load_image(
+    path: str, alpha: bool = False, colorkey: tuple[int, int, int] | None = None
+) -> pygame.Surface:
+    """Load image file"""
+    img = pygame.image.load(path)
+    img = img.convert_alpha() if alpha else img.convert()
+    if colorkey:
+        img.set_colorkey(colorkey)
+    return img
+
+def clip(
+    surf: pygame.Surface, x: int, y: int, width: int, height: int
+) -> pygame.Surface:
+    """Return a cropped surface"""
+    handle_surf = surf.copy()
+    clip_rect = pygame.Rect(x, y, width, height)
+    handle_surf.set_clip(clip_rect)
+    img = surf.subsurface(handle_surf.get_clip())
+    return img
+
+def swap_color(
+    surf: pygame.Surface,
+    old_color: tuple[int, int, int],
+    new_color: tuple[int, int, int],
+) -> pygame.Surface:
+    """change a color of the surface"""
+    img_copy = pygame.Surface(surf.get_size())
+    img_copy.fill(new_color)
+    surf.set_colorkey(old_color)
+    img_copy.blit(surf, (0, 0))
+    return img_copy
+
+
 class SpriteSheet:
     """Class to handle sprite sheets"""
 
