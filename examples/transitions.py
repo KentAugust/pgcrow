@@ -9,7 +9,7 @@ class SceneOne(pgcrow.Scene2D):
         self.font = pygame.font.SysFont('lucidaconsole', size=8)
         self.timer = pgcrow.timers.Chronometer()
 
-    def on_enter(self, dt):
+    def on_enter_update(self, dt):
         self.timer.update(dt)
 
         # change the clean_color
@@ -26,7 +26,7 @@ class SceneOne(pgcrow.Scene2D):
             return True # transition finished
         return False
 
-    def on_exit(self, dt):
+    def on_exit_update(self, dt):
         self.timer.update(dt)
 
         # change the clean_color
@@ -45,10 +45,10 @@ class SceneOne(pgcrow.Scene2D):
         if self.game.keyboard.pressed_this_frame(pygame.K_n):
             self.scene_manager.change_scene("Scene 2")
 
-    def render(self):
+    def render(self, display: pygame.Surface):
         # blit text
         fps_surf = self.font.render(f"Scene 1", False, (220, 220, 220))
-        self.game.window.display.blit(fps_surf, (5, 5))
+        display.blit(fps_surf, (5, 5))
 
 
 class SceneTwo(pgcrow.Scene2D):
@@ -71,7 +71,7 @@ class SceneTwo(pgcrow.Scene2D):
         self.font = pygame.font.SysFont('lucidaconsole', size=8)
         self.timer = pgcrow.timers.Chronometer()
 
-    def on_enter(self, dt):
+    def on_enter_update(self, dt):
         self.timer.update(dt)
 
         # drawing a white circle
@@ -89,7 +89,7 @@ class SceneTwo(pgcrow.Scene2D):
             return True # transition finished
         return False
 
-    def on_exit(self, dt):
+    def on_exit_update(self, dt):
         self.timer.update(dt)
 
         # this is expencive since we are creating new surface every frame
@@ -103,7 +103,8 @@ class SceneTwo(pgcrow.Scene2D):
         )
         self.surf.set_colorkey((255, 255, 255))
 
-        if self.timer.current_time >= 1200:
+        if self.timer.current_time >= 1100:
+            self.surf = pygame.Surface(self.game.window.display.get_size())
             return True # transition finished
         return False
 
@@ -127,16 +128,21 @@ class SceneTwo(pgcrow.Scene2D):
         self.vec.y = move[1] * self.speed * dt
         self.pos.y += self.vec.y
 
-    def render(self):
+    def render(self, display: pygame.Surface):
         # blit player
-        self.game.window.display.blit(self.player, self.pos)
+        display.blit(self.player, self.pos)
 
         # blit text
         fps_surf = self.font.render(f"Scene 2: {self.game.clock.get_fps():.0f} fps", False, (220, 220, 220))
-        self.game.window.display.blit(fps_surf, (5, 5))
+        display.blit(fps_surf, (5, 5))
 
+    def on_enter_render(self, display: pygame.Surface):
         # blit transition surface
-        self.game.window.display.blit(self.surf, (0, 0))
+        display.blit(self.surf, (0, 0))
+
+    def on_exit_render(self, display: pygame.Surface):
+        # blit transition surface
+        display.blit(self.surf, (0, 0))
 
 
 class MyGame(pgcrow.Game):

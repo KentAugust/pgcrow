@@ -17,20 +17,26 @@ class Scene2D:
 
         self.scene_manager = scene_manager
 
-    def on_enter(self, dt: float) -> bool:
+    def on_enter_update(self, dt: float) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
         return True
 
-    def on_exit(self, dt: float) -> bool:
+    def on_exit_update(self, dt: float) -> bool:
         """Ativate when exit the scene and return True when finish"""
 
         return True
+
+    def on_enter_render(self, display: pygame.Surface):
+        """Render when enter the scene"""
+
+    def on_exit_render(self, display: pygame.Surface):
+        """Render when exit the scene"""
 
     def update(self, dt: float):
         """For updating stuff"""
         if self.game.keyboard.pressed_this_frame(pygame.K_F11):
             self.game.window.toggle_fullscreen()
 
-    def render(self):
+    def render(self, display: pygame.Surface):
         """For rendering stuff"""

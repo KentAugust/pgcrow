@@ -7,6 +7,7 @@ import pygame
 from .config import GameConfig, Window
 from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
+from .maths import Vec2
 from .scene_manager import SceneManager
 from .timers import Delta
 
@@ -32,6 +33,7 @@ class Game:
         self.scene_manager = SceneManager(self)  # set main as an empty scene
         self.clock = pygame.Clock()
         self.deltatimer = Delta()
+        self.display_offset = Vec2()
 
     def run(self):
         """Run the main game loop"""
@@ -41,8 +43,8 @@ class Game:
             self.window.clean(self.config.clean_color)
             self.event_handler.loop()
             self.scene_manager.update(dt)
-            self.scene_manager.actual_scene.render()
-            self.window.update_display()
+            self.scene_manager.render(self.window.display)
+            self.window.update_display(self.display_offset)
             self.clock.tick(self.config.target_fps)
 
     def set_title(self, title="Pygame Window", icontitle: str | None = None):

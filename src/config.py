@@ -7,6 +7,7 @@ from typing import Any, NamedTuple, Protocol
 import pygame
 
 from .consts import ScaleFuntions
+from .maths import Vec2
 
 
 @dataclass
@@ -42,7 +43,7 @@ class Window(Protocol):
     def __init__(self, config: WindowConfig) -> None:
         ...
 
-    def update_display(self):
+    def update_display(self, offset: tuple[int, int]):
         """Render to the screen"""
 
     def update_win_size(self, size_option: int):
@@ -61,6 +62,7 @@ class Game(Protocol):
     config: GameConfig
     window: Window
     clock: pygame.Clock
+    display_offset: Vec2
 
     def __init__(self, config: GameConfig, window: Window) -> None:
         ...
@@ -96,6 +98,9 @@ class SceneManager(Protocol):
     def update(self, dt: float):
         """Update current scene"""
 
+    def reder(self, display: pygame.Surface):
+        """Render current scene"""
+
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
 
@@ -117,11 +122,17 @@ class Scene2D(Protocol):
     def __init__(self, game: Game) -> None:
         ...
 
-    def on_enter(self, dt) -> bool:
+    def on_enter_update(self, dt) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
-    def on_exit(self, dt) -> bool:
+    def on_exit_update(self, dt) -> bool:
         """Ativate when exit the scene and return True when finish"""
+
+    def on_enter_render(self, display: pygame.Surface):
+        """Render when enter the scene"""
+
+    def on_exit_render(self, display: pygame.Surface):
+        """Render when exit the scene"""
 
     def set_scene_manager(self, scene_manager: SceneManager):
         """Set scene manager"""
@@ -129,5 +140,5 @@ class Scene2D(Protocol):
     def update(self, dt: float):
         """For updating stuff"""
 
-    def render(self):
+    def render(self, display: pygame.Surface):
         """For rendering stuff"""
