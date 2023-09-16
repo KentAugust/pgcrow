@@ -7,6 +7,7 @@ from typing import Any, NamedTuple, Protocol
 import pygame
 
 from .consts import ScaleFuntions
+from .maths import Vec2
 
 
 @dataclass
@@ -42,7 +43,7 @@ class Window(Protocol):
     def __init__(self, config: WindowConfig) -> None:
         ...
 
-    def update_display(self):
+    def update_display(self, offset: tuple[int, int]):
         """Render to the screen"""
 
     def update_win_size(self, size_option: int):
@@ -61,6 +62,7 @@ class Game(Protocol):
     config: GameConfig
     window: Window
     clock: pygame.Clock
+    display_offset: Vec2
 
     def __init__(self, config: GameConfig, window: Window) -> None:
         ...

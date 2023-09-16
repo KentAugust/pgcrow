@@ -112,11 +112,11 @@ class WindowDisplay(WindowScreen):
             case _:
                 self.scale_funtion = pygame.transform.scale
 
-    def update_display(self):
+    def update_display(self, offset: tuple[int, int] = (0, 0)):
         """Render to the screen"""
 
         self._win_screen.blit(
-            self.scale_funtion(self.__display, self._win_screen.get_size()), (0, 0)
+            self.scale_funtion(self.__display, self._win_screen.get_size()), offset
         )
         pygame.display.update()
 
