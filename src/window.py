@@ -86,7 +86,7 @@ class WindowScreen:
 
     def clean(self, bg_color: pygame.Color):
         """fills the screen/display with the given color"""
-
+        self._win_screen.fill(bg_color)
         self.display.fill(bg_color)
 
     @property
