@@ -41,7 +41,7 @@ class Game:
             self.window.clean(self.config.clean_color)
             self.event_handler.loop()
             self.scene_manager.update(dt)
-            self.scene_manager.actual_scene.render()
+            self.scene_manager.render(self.window.display)
             self.window.update_display()
             self.clock.tick(self.config.target_fps)
 
