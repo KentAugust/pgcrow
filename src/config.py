@@ -96,6 +96,9 @@ class SceneManager(Protocol):
     def update(self, dt: float):
         """Update current scene"""
 
+    def update(self,  display: pygame.Surface):
+        """Render current scene"""
+
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
 
@@ -117,10 +120,10 @@ class Scene2D(Protocol):
     def __init__(self, game: Game) -> None:
         ...
 
-    def on_enter(self, dt) -> bool:
+    def on_enter_update(self, dt) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
-    def on_exit(self, dt) -> bool:
+    def on_exit_update(self, dt) -> bool:
         """Ativate when exit the scene and return True when finish"""
 
     def set_scene_manager(self, scene_manager: SceneManager):
@@ -129,5 +132,5 @@ class Scene2D(Protocol):
     def update(self, dt: float):
         """For updating stuff"""
 
-    def render(self):
+    def render(self, display: pygame.Surface):
         """For rendering stuff"""
