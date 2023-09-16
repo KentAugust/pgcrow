@@ -70,7 +70,7 @@ class SceneManager:
     def change_scene(self, name: str):
         """Method to change scenes if name is avalible in scenes"""
 
-        if name in self._scenes:
+        if name in self._scenes and not (self._run_enter or self._run_exit):
             self._next_scene = name
             if not self._actual_scene:
                 self._init_scene()
