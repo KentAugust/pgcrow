@@ -17,14 +17,16 @@ class Animation:
         self.loop = loop
         self.ended = False
         self.frame = 0
+        self._flip = [False, False]
         self._current_frame = 0
         self._chronometer = Chronometer()
 
-    def update(self, dt: float):
+    def play(self, dt: float, flip_x: bool = False, flip_y: bool = False) -> pygame.Surface:
         """Updates the current frame"""
         if not self.ended:
             self._chronometer.update(dt)
 
+        # update animation frame
         if self._chronometer.current_time >= self._animation_data[self._current_frame][1]:
             self.frame += 1
             if not self.loop and self.frame >= len(self._animation_data):
@@ -33,9 +35,7 @@ class Animation:
             self._current_frame = self.frame % len(self._animation_data)
             self._chronometer.reset()
 
-    def play(self, flip_x: bool = False, flip_y: bool = False) -> pygame.Surface:
-        """Get the current frame surface"""
-        return flip(self._animation_data[self._current_frame][0], flip_x, flip_y)
+        self._flip = [flip_x, flip_y]
 
     def stop(self):
         """Restart the animation"""
@@ -47,6 +47,11 @@ class Animation:
     def copy(self) -> "Animation":
         """Return a copy of Animation"""
         return Animation(self._animation_data, self.loop)
+
+    @property
+    def image(self) -> pygame.Surface:
+        """Get the current frame surface"""
+        return flip(self._animation_data[self._current_frame][0], self._flip[0], self._flip[1])
     
     @property
     def animation_data(self) -> list[FrameData]:
