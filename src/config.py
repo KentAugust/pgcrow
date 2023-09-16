@@ -96,7 +96,7 @@ class SceneManager(Protocol):
     def update(self, dt: float):
         """Update current scene"""
 
-    def update(self,  display: pygame.Surface):
+    def reder(self,  display: pygame.Surface):
         """Render current scene"""
 
     def add_scene(self, name: str, scene: CallableScene):
