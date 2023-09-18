@@ -5,7 +5,7 @@ from typing import NamedTuple
 
 import pygame
 
-FrameData = NamedTuple("FrameData", [("surf", pygame.Surface), ("duration", int)])
+FrameData = NamedTuple("FrameData", [("surf", pygame.Surface), ("duration", float)])
 
 
 class ScaleFuntions(StrEnum):
