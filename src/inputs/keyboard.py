@@ -67,7 +67,7 @@ class Keyboard:
     def frames_since_press(self, key: int) -> Optional[int]:
         return pygame.time.get_ticks() - k.start_frame if (k := self.key(key)) else None
 
-    def pressed_this_frame(self, key: int) -> bool:
+    def just_pressed(self, key: int) -> bool:
         return self.frames_since_press(key) == 0
 
     def is_held(self, key: int) -> bool:
@@ -91,5 +91,5 @@ class Keyboard:
     def frames_since_release(self, key: int) -> Optional[int]:
         return pygame.time.get_ticks() - t if (t := self.release_frame(key)) else None
 
-    def released_this_frame(self, key: int) -> bool:
+    def just_released(self, key: int) -> bool:
         return self.frames_since_release(key) == 0
