@@ -1,5 +1,7 @@
 """Scene Manager"""
 
+import pygame
+
 from .config import CallableScene, Game
 from .scene_2d import Scene2D
 
@@ -26,19 +28,20 @@ class SceneManager:
         self.add_scene(initial_name, initial)
         self.change_scene(initial_name)
 
-    def update(self, dt):
+    def update(self, dt: float):
         """Update current scene"""
 
         self._actual_scene.update(dt)
         self._update_transtion(dt)
 
-    def render(self, display):
+    def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
         """Render current scene"""
 
         self._actual_scene.render(display)
         self._render_transtion(display)
+        self._actual_scene.render_screen(self.game.window.get_screen(offset))
 
-    def _update_transtion(self, dt):
+    def _update_transtion(self, dt: float):
         """Update the current scene transition"""
 
         if self._run_exit:
@@ -48,7 +51,7 @@ class SceneManager:
             if self._actual_scene.on_enter_update(dt):
                 self._run_enter = False
 
-    def _render_transtion(self, display):
+    def _render_transtion(self, display: pygame.Surface):
         """Update the current scene transition"""
 
         if self._run_exit:
