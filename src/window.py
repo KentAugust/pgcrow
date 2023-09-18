@@ -89,6 +89,11 @@ class WindowScreen:
         self._win_screen.fill(bg_color)
         self.display.fill(bg_color)
 
+    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
+        """Returns the screen surface"""
+
+        return self._win_screen
+
     @property
     def display(self):
         """Returns the screen surface"""
@@ -112,13 +117,13 @@ class WindowDisplay(WindowScreen):
             case _:
                 self.scale_funtion = pygame.transform.scale
 
-    def update_display(self, offset: tuple[int, int] = (0, 0)):
-        """Render to the screen"""
+    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
+        """Returns the screen surface"""
 
         self._win_screen.blit(
             self.scale_funtion(self.__display, self._win_screen.get_size()), offset
         )
-        pygame.display.update()
+        return self._win_screen
 
     @property
     def display(self):
