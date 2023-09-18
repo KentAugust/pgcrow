@@ -7,6 +7,7 @@ from typing import Any, NamedTuple, Protocol
 import pygame
 
 from .consts import ScaleFuntions
+from .inputs import Keyboard, Mouse
 from .maths import Vec2
 
 
@@ -66,6 +67,8 @@ class Game(Protocol):
     window: Window
     clock: pygame.Clock
     display_offset: Vec2
+    keyboard: Keyboard
+    mouse: Mouse
 
     def __init__(self, config: GameConfig, window: Window) -> None:
         ...
