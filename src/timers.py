@@ -62,7 +62,7 @@ class Chronometer:
         """Update the currente time"""
 
         self.__start_time += dt
-        self.__current_time = self.__start_time * 1000
+        self.__current_time = self.__start_time
         return self.__current_time
 
     def reset(self):
@@ -73,5 +73,10 @@ class Chronometer:
 
     @property
     def current_time(self) -> float:
-        """Get currente time"""
+        """Get currente time in seconds"""
         return self.__current_time
+
+    @property
+    def current_time_ms(self) -> float:
+        """Get currente time in miliseconds"""
+        return self.__current_time * 1000
