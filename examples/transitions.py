@@ -6,7 +6,7 @@ import pgcrow
 class SceneOne(pgcrow.Scene2D):
     def __init__(self, game: pgcrow.Game) -> None:
         super().__init__(game)
-        self.font = pygame.font.SysFont('lucidaconsole', size=8)
+        self.font = pygame.font.SysFont('lucidaconsole', size=16)
         self.timer = pgcrow.timers.Chronometer()
 
     def on_enter_update(self, dt):
@@ -14,12 +14,12 @@ class SceneOne(pgcrow.Scene2D):
 
         # change the clean_color
         self.game.config.clean_color = (
-            min(round(self.timer.current_time/100) * 16, 180 ),
-            min(round(self.timer.current_time/100) * 2, 130 ),
-            min(round(self.timer.current_time/100) * 4, 130 )
+            min(round(self.timer.current_time * 10) * 16, 180 ),
+            min(round(self.timer.current_time * 10) * 2, 130 ),
+            min(round(self.timer.current_time * 10) * 4, 130 )
         )
 
-        if self.timer.current_time >= 1200:
+        if self.timer.current_time >= 1.2:
             # reset the timer because we want to reuse it
             # in the on_exit transition
             self.timer.reset()
@@ -31,24 +31,25 @@ class SceneOne(pgcrow.Scene2D):
 
         # change the clean_color
         self.game.config.clean_color = (
-            max(10, 180 - round(self.timer.current_time/100) * 2 ),
-            max(10, 130 - round(self.timer.current_time/100) * 8 ),
-            max(10, 130 - round(self.timer.current_time/100) * 32 )
+            max(10, 180 - round(self.timer.current_time * 10) * 2 ),
+            max(10, 130 - round(self.timer.current_time * 10) * 8 ),
+            max(10, 130 - round(self.timer.current_time * 10) * 32 )
         )
 
-        if self.timer.current_time >= 1200:
+        if self.timer.current_time >= 1.2:
             return True # transition finished
         return False
 
     def update(self, dt: float):
         # changing to Scene 2
-        if self.game.keyboard.pressed_this_frame(pygame.K_n):
+        # It won't work until the transitions are finished
+        if self.game.keyboard.just_pressed(pygame.K_n):
             self.scene_manager.change_scene("Scene 2")
 
-    def render(self, display: pygame.Surface):
+    def render_screen(self, screen: pygame.Surface):
         # blit text
-        fps_surf = self.font.render(f"Scene 1", False, (220, 220, 220))
-        display.blit(fps_surf, (5, 5))
+        fps_surf = self.font.render(f"Scene 1: {self.game.clock.get_fps():.0f} fps", False, (220, 220, 220))
+        screen.blit(fps_surf, (5, 5))
 
 
 class SceneTwo(pgcrow.Scene2D):
@@ -68,7 +69,7 @@ class SceneTwo(pgcrow.Scene2D):
         self.speed = 180
         self.movement = [False, False, False, False]
 
-        self.font = pygame.font.SysFont('lucidaconsole', size=8)
+        self.font = pygame.font.SysFont('lucidaconsole', size=16)
         self.timer = pgcrow.timers.Chronometer()
 
     def on_enter_update(self, dt):
@@ -79,10 +80,10 @@ class SceneTwo(pgcrow.Scene2D):
             self.surf,
             (255, 255, 255),
             (self.surf.get_width()//2, self.surf.get_height()//2),
-            round(self.timer.current_time * (self.surf.get_width()/1600))
+            round(self.timer.current_time * (self.surf.get_width()/1.6))
         )
 
-        if self.timer.current_time >= 1200:
+        if self.timer.current_time >= 1.2:
             # reset the timer because we want to reuse it
             # in the on_exit transition
             self.timer.reset()
@@ -92,25 +93,26 @@ class SceneTwo(pgcrow.Scene2D):
     def on_exit_update(self, dt):
         self.timer.update(dt)
 
-        # this is expencive since we are creating new surface every frame
-        self.surf = pygame.Surface(self.game.window.display.get_size())
+        self.surf.fill((0, 0, 0))
+
         # drawing a white circle
         pygame.draw.circle(
             self.surf,
             (255, 255, 255),
             (self.surf.get_width()//2, self.surf.get_height()//2),
-            self.surf.get_height() - round(self.timer.current_time * (self.surf.get_width()/1200))
+            self.surf.get_height() - round(self.timer.current_time * (self.surf.get_width()/1.6))
         )
         self.surf.set_colorkey((255, 255, 255))
 
-        if self.timer.current_time >= 1100:
-            self.surf = pygame.Surface(self.game.window.display.get_size())
+        if self.timer.current_time >= 1.2:
+            self.game.config.clean_color = (0, 0, 0)
             return True # transition finished
         return False
 
     def update(self, dt: float):
         # transition to Scene 1
-        if self.game.keyboard.pressed_this_frame(pygame.K_n):
+        # It won't work until the transitions are finished
+        if self.game.keyboard.just_pressed(pygame.K_n):
             self.scene_manager.change_scene("Scene 1")
 
         # controll player
@@ -132,9 +134,10 @@ class SceneTwo(pgcrow.Scene2D):
         # blit player
         display.blit(self.player, self.pos)
 
+    def render_screen(self, screen: pygame.Surface):
         # blit text
         fps_surf = self.font.render(f"Scene 2: {self.game.clock.get_fps():.0f} fps", False, (220, 220, 220))
-        display.blit(fps_surf, (5, 5))
+        screen.blit(fps_surf, (5, 5))
 
     def on_enter_render(self, display: pygame.Surface):
         # blit transition surface
@@ -150,13 +153,12 @@ class MyGame(pgcrow.Game):
         # setting our window configuration
         win_config = pgcrow.config.WindowConfig(
             window_size=(720, 480),
-            scale_factor=2,
-            avalible_window_sizes=[(1280, 720), (640, 360), (320, 180)],
+            scale_factor=2
         )
 
         # setting our game configuration
         game_config = pgcrow.config.GameConfig(
-            title="pgcrow testing", 
+            title="Example Transitions", 
             target_fps=60,
         )
         super().__init__(game_config, pgcrow.WindowDisplay(win_config))
