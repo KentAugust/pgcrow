@@ -15,10 +15,10 @@ class Animation:  # pylint: disable=R0902
         self.lenght = lenght
         self.ended = False
         self.paused = False
-        self.frame = 0
+        self._current_frame = 0
         self._total_frames = total_frames
         self._frame_lenght = self.lenght / self._total_frames
-        self._current_frame = 0
+        self._frame = 0
         self._chronometer = Chronometer()
 
     def play(self, dt: float):
@@ -31,11 +31,11 @@ class Animation:  # pylint: disable=R0902
             self._chronometer.current_time
             >= self._frame_lenght
         ):
-            self.frame += 1
-            if not self.loop and self.frame >= self._total_frames:
-                self.frame = self._total_frames - 1
+            self._current_frame += 1
+            if not self.loop and self._current_frame >= self._total_frames:
+                self._current_frame = self._total_frames - 1
                 self.ended = True
-            self._current_frame = self.frame % self._total_frames
+            self._frame = self._current_frame % self._total_frames
             self._chronometer.reset()
 
     def pause(self) -> bool:
@@ -46,8 +46,8 @@ class Animation:  # pylint: disable=R0902
     def stop(self):
         """Restart the animation"""
         self._chronometer.reset()
-        self.frame = 0
         self._current_frame = 0
+        self._frame = 0
         self.ended = False
 
     def copy(self) -> "Animation":
@@ -70,7 +70,7 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
     ):
         """Updates the current frame"""
         super().play(dt)
-        self._frame_lenght = self._animation_data[self._current_frame][1]
+        self._frame_lenght = self._animation_data[self._frame][1]
         self._flip = [flip_x, flip_y]
 
     def pause(self) -> bool:
@@ -81,8 +81,8 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
     def stop(self):
         """Restart the animation"""
         self._chronometer.reset()
-        self.frame = 0
         self._current_frame = 0
+        self._frame = 0
         self.ended = False
 
     def copy(self) -> "Animation":
@@ -93,7 +93,7 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
     def image(self) -> pygame.Surface:
         """Get the current frame surface"""
         return flip(
-            self._animation_data[self._current_frame][0], self._flip[0], self._flip[1]
+            self._animation_data[self._frame][0], self._flip[0], self._flip[1]
         )
 
     @property
