@@ -27,7 +27,7 @@ class Animation:  # pylint: disable=R0902
         """Updates the current frame"""
         if not self.has_ended and not self.is_paused:
             self._timer.update(dt)
-            self._current_time += self.dt
+            self._current_time += dt
 
         # update animation frame
         if self._timer.current_time >= self.frame_length:
@@ -56,23 +56,28 @@ class Animation:  # pylint: disable=R0902
 
     @property
     def length(self) -> float:
+        """Get animation length"""
         return self._length
 
     @length.setter
     def length(self, value: float):
+        """Change animation length"""
         self._length = max(1, value)
         self._total_frames = round(self._fps * self._length)
 
     @property
     def frame(self) -> int:
+        """Get animation frame"""
         return self._frame
 
     @property
     def current_frame(self) -> int:
+        """Get current frame of the total animation"""
         return self._current_frame
-    
+
     @property
     def current_time(self) -> float:
+        """Get current time of the total animation"""
         return self._current_time
 
 
@@ -81,7 +86,7 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
 
     def __init__(self, animation_data: list[FrameData], loop: bool = False):
         lenght = sum(frame_data[1] for frame_data in animation_data)
-        super().__init__(lenght, len(animation_data)*lenght, loop)
+        super().__init__(lenght, len(animation_data) * lenght, loop)
         self._animation_data = animation_data
         self._total_frames = len(animation_data)
         self.frame_length = self._animation_data[0][1]
@@ -92,18 +97,6 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
         super().play(dt)
         self.frame_length = self._animation_data[self._frame][1]
         self._flip = [flip_x, flip_y]
-
-    def pause(self) -> bool:
-        """Pause the animation"""
-        self.is_paused = not self.is_paused
-        return self.is_paused
-
-    def stop(self):
-        """Restart the animation"""
-        self._timer.reset()
-        self._current_frame = 0
-        self._frame = 0
-        self.has_ended = False
 
     def copy(self) -> "Animation":
         """Return a copy of Animation"""
@@ -118,3 +111,10 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
     def animation_data(self) -> list[FrameData]:
         """Get all frames data"""
         return self._animation_data
+
+    @classmethod
+    def create_animation_data(
+        cls, images: list[pygame.Surface], duration: float
+    ) -> list[FrameData]:
+        """Creates a list of FrameData"""
+        return [FrameData(surf, duration) for surf in images]
