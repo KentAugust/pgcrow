@@ -2,7 +2,7 @@
 
 import pygame
 
-from .animation import SpriteAnimation
+from .animations import SpriteAnimation
 from .maths import Vec2
 from .timers import Chronometer
 
