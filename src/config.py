@@ -7,11 +7,12 @@ from typing import Any, NamedTuple, Protocol
 import pygame
 
 from .consts import ScaleFuntions
+from .inputs import Keyboard, Mouse
 from .maths import Vec2
 
 
 @dataclass
-class WindowConfig: # pylint: disable=R0902
+class WindowConfig:  # pylint: disable=R0902
     """Window configuration class"""
 
     window_size: tuple[int, int]
@@ -43,11 +44,14 @@ class Window(Protocol):
     def __init__(self, config: WindowConfig) -> None:
         ...
 
-    def update_display(self, offset: tuple[int, int]):
+    def update_display(self):
         """Render to the screen"""
 
     def update_win_size(self, size_option: int):
         """Update window size with if the option is avalible in disktop sizes"""
+
+    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
+        """Returns the screen surface"""
 
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
@@ -63,6 +67,8 @@ class Game(Protocol):
     window: Window
     clock: pygame.Clock
     display_offset: Vec2
+    keyboard: Keyboard
+    mouse: Mouse
 
     def __init__(self, config: GameConfig, window: Window) -> None:
         ...
@@ -98,7 +104,7 @@ class SceneManager(Protocol):
     def update(self, dt: float):
         """Update current scene"""
 
-    def reder(self, display: pygame.Surface):
+    def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
         """Render current scene"""
 
     def add_scene(self, name: str, scene: CallableScene):
@@ -142,3 +148,6 @@ class Scene2D(Protocol):
 
     def render(self, display: pygame.Surface):
         """For rendering stuff"""
+
+    def render_screen(self, screen: pygame.Surface):
+        """For rendering stuff directly on to screen"""

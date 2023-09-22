@@ -30,9 +30,11 @@ class MyGame(pgcrow.Game):
             can_resize=True
         )
 
+        title = f"Example Window{window_type.title() if window_type in ('screen', 'display') else 'Screen'}"
+
         # setting our game configuration
         game_config = pgcrow.config.GameConfig(
-            title="Example WindowDisplay",
+            title=title,
             target_fps=60,
             clean_color=(30, 30, 30),
             start_fullscreen=False
@@ -56,7 +58,7 @@ class MyGame(pgcrow.Game):
 class MyScene(pgcrow.Scene2D):
     def __init__(self, game: pgcrow.Game) -> None:
         super().__init__(game)
-        self.font = pygame.font.SysFont('lucidaconsole', size=8)
+        self.font = pygame.font.SysFont('lucidaconsole', size=16)
 
         # creating our box player (same as the window_screen example)
         self.box = pygame.Surface((16, 16))
@@ -67,15 +69,15 @@ class MyScene(pgcrow.Scene2D):
 
     def update(self, dt): # Game will pass dt
         # changing the screen size
-        if self.game.keyboard.pressed_this_frame(pygame.K_1):
+        if self.game.keyboard.just_pressed(pygame.K_1):
             self.game.window.update_win_size(1)
-        if self.game.keyboard.pressed_this_frame(pygame.K_2):
+        if self.game.keyboard.just_pressed(pygame.K_2):
             self.game.window.update_win_size(2)
-        if self.game.keyboard.pressed_this_frame(pygame.K_3):
+        if self.game.keyboard.just_pressed(pygame.K_3):
             self.game.window.update_win_size(3)
-        if self.game.keyboard.pressed_this_frame(pygame.K_4):
+        if self.game.keyboard.just_pressed(pygame.K_4):
             self.game.window.update_win_size(4)
-        if self.game.keyboard.pressed_this_frame(pygame.K_F11):
+        if self.game.keyboard.just_pressed(pygame.K_F11):
             self.game.window.toggle_fullscreen()
 
         # player controll
@@ -91,22 +93,23 @@ class MyScene(pgcrow.Scene2D):
         self.box_rect.x += movement[0] * self.speed * dt
         self.box_rect.y += movement[1] * self.speed * dt
 
-    def render(self):
+    def render(self, display):
         # rendering the player
-        self.game.window.display.blit(self.box, self.box_rect)
-        
+        display.blit(self.box, self.box_rect)
+    
+    def render_screen(self, screen):
         # rendering text
         txt_surf = self.font.render("press 1-4 to change screen size, f11 to fullscreen", False, (200, 200, 200))
-        self.game.window.display.blit(txt_surf, (10, 10))
+        screen.blit(txt_surf, (10, 10))
 
         mouse_pos = self.game.mouse.get_pos()
         txt_surf = self.font.render(f"Mouse pos {mouse_pos}", False, (200, 200, 200))
-        self.game.window.display.blit(txt_surf, (10, 30))
+        screen.blit(txt_surf, (10, 30))
 
         # important mouse_pos_scaled is a tuple of floats
         mouse_pos_scaled = self.game.mouse.get_pos_scaled(self.game.window.current_win_size, self.game.window.display.get_size())
         txt_surf = self.font.render(f"Mouse pos scaled {mouse_pos_scaled}", False, (200, 200, 200))
-        self.game.window.display.blit(txt_surf, (10, 40))
+        screen.blit(txt_surf, (10, 40))
 
 
 if __name__ == "__main__":

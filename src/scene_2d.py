@@ -40,3 +40,6 @@ class Scene2D:
 
     def render(self, display: pygame.Surface):
         """For rendering stuff"""
+
+    def render_screen(self, screen: pygame.Surface):
+        """For rendering stuff directly on to screen"""

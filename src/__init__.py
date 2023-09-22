@@ -1,7 +1,7 @@
 """Library gate"""
 
 from . import config, consts, inputs, maths, timers, window
-from .animation import Animation
+from .animations import Animation, SpriteAnimation
 from .consts import *
 from .event_handler import EventHandler
 from .game import Game

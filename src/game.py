@@ -12,7 +12,7 @@ from .scene_manager import SceneManager
 from .timers import Delta
 
 
-class Game:
+class Game:  # pylint: disable=R0902
     """General class that represent the game"""
 
     def __init__(
@@ -43,8 +43,8 @@ class Game:
             self.window.clean(self.config.clean_color)
             self.event_handler.loop()
             self.scene_manager.update(dt)
-            self.scene_manager.render(self.window.display)
-            self.window.update_display(self.display_offset)
+            self.scene_manager.render(self.window.display, self.display_offset)
+            self.window.update_display()
             self.clock.tick(self.config.target_fps)
 
     def set_title(self, title="Pygame Window", icontitle: str | None = None):

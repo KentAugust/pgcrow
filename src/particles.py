@@ -2,7 +2,7 @@
 
 import pygame
 
-from .animation import Animation
+from .animations import SpriteAnimation
 from .maths import Vec2
 from .timers import Chronometer
 
@@ -31,10 +31,10 @@ class Particle:
 
 
 class AnimatedParticle(Particle):
-    """Particle class that uses Animation class"""
+    """Particle class that uses SpriteAnimation class"""
 
     def __init__(
-        self, animation: Animation, pos: tuple[int, int], vel: tuple[float, float]
+        self, animation: SpriteAnimation, pos: tuple[int, int], vel: tuple[float, float]
     ) -> None:
         self.animation = animation.copy()
         super().__init__(self.animation.image, pos, vel, 0)
