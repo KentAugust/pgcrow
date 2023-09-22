@@ -10,23 +10,13 @@ class WindowScreen:
     """Window class that blits on the screen"""
 
     def __init__(self, config: WindowConfig) -> None:
+        self._const_flags = 0
         self.config = config
         self.is_fullscreen = False
         if not pygame.get_init():
             pygame.init()
 
-        # init desktop sizes
-        self.desktop_sizes = pygame.display.get_desktop_sizes()
-        if not self.config.avalible_window_sizes:
-            self.config.avalible_window_sizes = []
-        for size in sorted(self.config.avalible_window_sizes, reverse=True):
-            if size not in set(self.desktop_sizes):
-                self.desktop_sizes.append(size)
-        if self.config.window_size not in set(self.desktop_sizes):
-            self.desktop_sizes.append(self.config.window_size)
-        self.desktop_sizes = tuple(
-            sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True)
-        )
+        self._init_desktop_sizes()
 
         self._win_screen = None
         self.update_win_size(
@@ -37,12 +27,10 @@ class WindowScreen:
 
     def update_display(self):
         """Render to the screen"""
-
         pygame.display.update()
 
     def update_win_size(self, size_option: int):
         """Update window size with if the option is avalible in disktop sizes"""
-
         try:
             size = self.desktop_sizes[size_option]
         except IndexError:
@@ -76,7 +64,6 @@ class WindowScreen:
 
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
-
         if not self.is_fullscreen:
             self.update_win_size(0)
         else:
@@ -91,13 +78,25 @@ class WindowScreen:
 
     def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
         """Returns the screen surface"""
-
         return self._win_screen
+
+    def _init_desktop_sizes(self):
+        # init desktop sizes
+        self.desktop_sizes = pygame.display.get_desktop_sizes()
+        if not self.config.avalible_window_sizes:
+            self.config.avalible_window_sizes = []
+        for size in sorted(self.config.avalible_window_sizes, reverse=True):
+            if size not in set(self.desktop_sizes):
+                self.desktop_sizes.append(size)
+        if self.config.window_size not in set(self.desktop_sizes):
+            self.desktop_sizes.append(self.config.window_size)
+        self.desktop_sizes = tuple(
+            sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True)
+        )
 
     @property
     def display(self):
         """Returns the screen surface"""
-
         return self._win_screen
 
 
@@ -119,7 +118,6 @@ class WindowDisplay(WindowScreen):
 
     def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
         """Returns the screen surface"""
-
         self._win_screen.blit(
             self.scale_funtion(self.__display, self._win_screen.get_size()), offset
         )
@@ -128,5 +126,42 @@ class WindowDisplay(WindowScreen):
     @property
     def display(self):
         """Returns the display surface"""
-
         return self.__display
+
+
+class WindowScreenGl(WindowScreen):
+    """Window class that blits on the screen. Set pygame.OPENGL | pygame.DOUBLEBUF flags"""
+
+    def __init__(self, config: WindowConfig) -> None:
+        self._const_flags = pygame.DOUBLEBUF | pygame.OPENGL
+        self.config = config
+        self.is_fullscreen = False
+        if not pygame.get_init():
+            pygame.init()
+
+        self._init_desktop_sizes()
+
+        self.current_win_size = self.config.window_size
+        self._win_screen = pygame.display.set_mode(
+            self.current_win_size, self._const_flags
+        )
+        self._screen_surf = pygame.Surface(self.config.window_size)
+        self.is_fullscreen = self.desktop_sizes.index(self.config.window_size) == 0
+
+    def update_win_size(self, size_option: int):
+        # TODO: a way to change the window size and _screen_surf
+        print(
+            "WARNING: It's not possible to change window size of this type of Window for now"
+        )
+
+    def update_display(self):
+        """Render to the screen"""
+
+    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
+        """Returns the screen surface"""
+        return self._screen_surf
+
+    @property
+    def display(self):
+        """Returns the screen surface"""
+        return self._screen_surf
