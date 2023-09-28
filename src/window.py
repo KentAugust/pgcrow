@@ -186,3 +186,33 @@ class WindowScreenGl(WindowScreen):
     def screen(self):
         """Returns the screen surface"""
         return self._screen_surf
+
+
+class WindowDisplayGl(WindowScreenGl):
+    def __init__(self, config: WindowConfig) -> None:
+        super().__init__(config)
+        match config.scale_funtion:
+            case "smooth":
+                self.scale_funtion = pygame.transform.smoothscale
+            case _:
+                self.scale_funtion = pygame.transform.scale
+
+    def init_screen(self) -> Self:
+        """Initialize screen"""
+        super().init_screen()
+        screen_size = self._screen_surf.get_size()
+        self._display = pygame.transform.scale_by(
+            pygame.Surface(screen_size), 1 / self.config.scale_factor
+        )
+        return self
+    
+    def update_display(self, offset: tuple[int, int] = (0, 0)):
+        """Render to the screen partially implemented, manually use pygame.flip instead"""
+        self._screen_surf.blit(
+            self.scale_funtion(self._display, self._screen_surf.get_size()), offset
+        )
+
+    @property
+    def display(self):
+        """Returns the screen surface"""
+        return self._display
