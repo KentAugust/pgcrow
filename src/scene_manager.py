@@ -48,7 +48,10 @@ class SceneManager:  # pylint: disable=R0902
         """Render current scene"""
         self._actual_scene.render(display)
         self.__render_transition(display)
-        self._actual_scene.render_screen(self.game.window.screen)
+
+    def render_screen(self, screen: pygame.Surface):
+        """Render current scene onto screen"""
+        self._actual_scene.render_screen(screen)
 
     def __update_transition(self, delta: float):
         """Update the current scene transition"""

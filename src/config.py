@@ -51,7 +51,7 @@ class Window(Protocol):
     def init_screen(self) -> Self:
         """Initialize screen"""
 
-    def update_display(self, offset: tuple[float, float] = (0, 0)):
+    def get_update_function(self, offset: tuple[float, float] = (0, 0)):
         """Render to the screen and flip"""
 
     def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
@@ -114,6 +114,9 @@ class SceneManager(Protocol):
 
     def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
         """Render current scene"""
+
+    def render_screen(self, screen: pygame.Surface):
+        """Render current scene onto screen"""
 
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""

@@ -30,9 +30,9 @@ class WindowScreen:
             self._is_fullscreen = size_index == 0
         return self
 
-    def update_display(self, _offset: tuple[int, int] = (0, 0)):
+    def get_update_function(self, _offset: tuple[int, int] = (0, 0)):
         """Render to the screen"""
-        pygame.display.update()
+        return pygame.display.update
 
     def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
         """Update window size if it can"""
@@ -129,12 +129,12 @@ class WindowDisplay(WindowScreen):
         )
         return self
 
-    def update_display(self, offset: tuple[int, int] = (0, 0)):
+    def get_update_function(self, offset: tuple[int, int] = (0, 0)):
         """Render to the screen"""
         self._win_screen.blit(
             self.scale_funtion(self._display, self._win_screen.get_size()), offset
         )
-        pygame.display.update()
+        return pygame.display.update
 
     @property
     def display(self):
@@ -157,8 +157,9 @@ class WindowScreenGl(WindowScreen):
             self._screen_surf = pygame.Surface(self._win_screen.get_size())
         return self
 
-    def update_display(self, _offset: tuple[int, int] = (0, 0)):
+    def get_update_function(self, _offset: tuple[int, int] = (0, 0)):
         """Render to the screen not implemented, manually use pygame.flip instead"""
+        return None
 
     def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
         if size == self._desktop_sizes[0]:
@@ -206,13 +207,14 @@ class WindowDisplayGl(WindowScreenGl):
         )
         return self
     
-    def update_display(self, offset: tuple[int, int] = (0, 0)):
+    def get_update_function(self, offset: tuple[int, int] = (0, 0)):
         """Render to the screen partially implemented, manually use pygame.flip instead"""
         self._screen_surf.blit(
             self.scale_funtion(self._display, self._screen_surf.get_size()), offset
         )
+        return None
 
     @property
     def display(self):
-        """Returns the screen surface"""
+        """Returns the display surface"""
         return self._display

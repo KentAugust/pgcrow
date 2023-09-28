@@ -40,7 +40,9 @@ class Game:  # pylint: disable=R0902
             self.event_handler.loop()
             self.scene_manager.update(delta)
             self.scene_manager.render(self.window.display)
-            self.window.update_display(self.display_offset)
+            update_funtion = self.window.get_update_function(self.display_offset)
+            self.scene_manager.render_screen(self.window.screen)
+            if update_funtion is not None: update_funtion()
             self.clock.tick(self.config.target_fps)
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
