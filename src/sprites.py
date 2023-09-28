@@ -13,6 +13,7 @@ def load_image(
         img.set_colorkey(colorkey)
     return img
 
+
 def clip(
     surf: pygame.Surface, x: int, y: int, width: int, height: int
 ) -> pygame.Surface:
@@ -22,6 +23,7 @@ def clip(
     handle_surf.set_clip(clip_rect)
     img = surf.subsurface(handle_surf.get_clip())
     return img
+
 
 def swap_color(
     surf: pygame.Surface,

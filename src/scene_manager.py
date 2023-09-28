@@ -39,10 +39,10 @@ class SceneManager:  # pylint: disable=R0902
         self.change_scene(self._initial_name)
         return self
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """Update current scene"""
-        self._actual_scene.update(dt)
-        self.__update_transition(dt)
+        self._actual_scene.update(delta)
+        self.__update_transition(delta)
 
     def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
         """Render current scene"""
@@ -50,13 +50,13 @@ class SceneManager:  # pylint: disable=R0902
         self.__render_transition(display)
         self._actual_scene.render_screen(self.game.window.screen)
 
-    def __update_transition(self, dt: float):
+    def __update_transition(self, delta: float):
         """Update the current scene transition"""
         if self._run_exit:
-            if self._actual_scene.on_exit_update(dt):
+            if self._actual_scene.on_exit_update(delta):
                 self.__init_scene()
         if self._run_enter:
-            if self._actual_scene.on_enter_update(dt):
+            if self._actual_scene.on_enter_update(delta):
                 self._run_enter = False
 
     def __render_transition(self, display: pygame.Surface):

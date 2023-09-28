@@ -68,6 +68,7 @@ class Game(Protocol):
 
     config: GameConfig
     window: Window
+    scene_manager: "SceneManager"
     clock: pygame.Clock
     display_offset: Vec2
     keyboard: Keyboard
@@ -107,7 +108,7 @@ class SceneManager(Protocol):
     ) -> None:
         ...
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """Update current scene"""
 
     def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
@@ -134,10 +135,10 @@ class Scene2D(Protocol):
     def __init__(self, game: Game) -> None:
         ...
 
-    def on_enter_update(self, dt) -> bool:
+    def on_enter_update(self, delta) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
-    def on_exit_update(self, dt) -> bool:
+    def on_exit_update(self, delta) -> bool:
         """Ativate when exit the scene and return True when finish"""
 
     def on_enter_render(self, display: pygame.Surface):
@@ -149,7 +150,7 @@ class Scene2D(Protocol):
     def set_scene_manager(self, scene_manager: SceneManager):
         """Set scene manager"""
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """For updating stuff"""
 
     def render(self, display: pygame.Surface):
