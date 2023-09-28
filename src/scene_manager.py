@@ -44,7 +44,7 @@ class SceneManager:  # pylint: disable=R0902
         self._actual_scene.update(delta)
         self.__update_transition(delta)
 
-    def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
+    def render(self, display: pygame.Surface):
         """Render current scene"""
         self._actual_scene.render(display)
         self.__render_transition(display)

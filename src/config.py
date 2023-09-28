@@ -50,7 +50,7 @@ class Window(Protocol):
     def init_screen(self) -> Self:
         """Initialize screen"""
 
-    def update_display(self):
+    def update_display(self, offset: tuple[float, float] = (0, 0)):
         """Render to the screen and flip"""
 
     def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:

@@ -30,7 +30,7 @@ class WindowScreen:
             self._is_fullscreen = size_index == 0
         return self
 
-    def update_display(self):
+    def update_display(self, _offset: tuple[int, int] = (0, 0)):
         """Render to the screen"""
         pygame.display.update()
 
@@ -109,28 +109,30 @@ class WindowDisplay(WindowScreen):
 
     def __init__(self, config: WindowConfig) -> None:
         super().__init__(config)
-        # init display surface
-        display_size = self._win_screen.get_size()
-        self.__display = pygame.transform.scale_by(
-            pygame.Surface(display_size), 1 / self.config.scale_factor
-        )
         match config.scale_funtion:
             case "smooth":
                 self.scale_funtion = pygame.transform.smoothscale
             case _:
-                self.scale_funtion = pygame.transform.scale
+                self.scale_funtion = pygame.transform.scale_by
 
-    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
-        """Returns the screen surface"""
-        self._win_screen.blit(
-            self.scale_funtion(self.__display, self._win_screen.get_size()), offset
+    def init_screen(self) -> Self:
+        super().init_screen()
+        screen_size = self._win_screen.get_size()
+        self._display = pygame.transform.scale_by(
+            pygame.Surface(screen_size), 1 / self.config.scale_factor
         )
-        return self._win_screen
+
+    def update_display(self, offset: tuple[int, int] = (0, 0)):
+        """Render to the screen"""
+        self._win_screen.blit(
+            self.scale_funtion(self._display, self._win_screen.get_size()), offset
+        )
+        pygame.display.update()
 
     @property
     def display(self):
         """Returns the display surface"""
-        return self.__display
+        return self._display
 
 
 class WindowScreenGl(WindowScreen):

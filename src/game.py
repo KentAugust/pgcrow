@@ -28,6 +28,7 @@ class Game:  # pylint: disable=R0902
 
     def run(self):
         """Run the main game loop"""
+        self.window.init_screen()
         self.scene_manager.start_initial_scene()
         self.set_title(self.config.title)
         if self.config.start_fullscreen and self.window.config.can_fullscreen:
@@ -38,8 +39,8 @@ class Game:  # pylint: disable=R0902
             self.window.clean(self.config.clean_color)
             self.event_handler.loop()
             self.scene_manager.update(delta)
-            self.scene_manager.render(self.window.display, self.display_offset)
-            self.window.update_display()
+            self.scene_manager.render(self.window.display)
+            self.window.update_display(self.display_offset)
             self.clock.tick(self.config.target_fps)
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
