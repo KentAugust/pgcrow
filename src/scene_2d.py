@@ -35,7 +35,7 @@ class Scene2D:
 
     def update(self, dt: float):
         """For updating stuff"""
-        if self.game.keyboard.pressed_this_frame(pygame.K_F11):
+        if self.game.keyboard.just_pressed(pygame.K_F11):
             self.game.window.toggle_fullscreen()
 
     def render(self, display: pygame.Surface):
