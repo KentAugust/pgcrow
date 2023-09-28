@@ -2,7 +2,7 @@
 module for setting different type of configuration needed for other classes"""
 
 from dataclasses import dataclass
-from typing import Any, NamedTuple, Protocol
+from typing import Any, NamedTuple, Protocol, Self
 
 import pygame
 
@@ -38,20 +38,23 @@ class GameConfig:
 class Window(Protocol):
     """Window Protocol"""
 
+    screen: pygame.Surface
     display: pygame.Surface
     config: WindowConfig
+    desktop_sizes: list[tuple[int, int]]
+    is_fullscreen: bool
 
     def __init__(self, config: WindowConfig) -> None:
         ...
 
+    def init_screen(self) -> Self:
+        """Initialize screen"""
+
     def update_display(self):
-        """Render to the screen"""
+        """Render to the screen and flip"""
 
-    def update_win_size(self, size_option: int):
-        """Update window size with if the option is avalible in disktop sizes"""
-
-    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
-        """Returns the screen surface"""
+    def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
+        """Update window size if it can"""
 
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
@@ -75,6 +78,9 @@ class Game(Protocol):
 
     def run(self):
         """Run the main game loop"""
+
+    def update_win_size(self, size_option: int) -> tuple[int, int]:
+        """Update window size with if the option is avalible in window disktop sizes"""
 
     def set_title(self, title="Pygame Window", icontitle: str | None = None):
         """Set window title"""

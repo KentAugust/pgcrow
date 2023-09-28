@@ -1,6 +1,8 @@
 """## Window
 Window module for handling differents type of window"""
 
+from typing import Self
+
 import pygame
 
 from .config import WindowConfig
@@ -11,91 +13,93 @@ class WindowScreen:
 
     def __init__(self, config: WindowConfig) -> None:
         self._const_flags = 0
+        self._prev_size = config.window_size
+        self._current_size = config.window_size
+        self._win_screen = None
+        self._is_fullscreen = False
+        self._desktop_sizes = []
         self.config = config
-        self.is_fullscreen = False
+
+    def init_screen(self) -> Self:
+        """Initialize screen"""
         if not pygame.get_init():
             pygame.init()
-
-        self._init_desktop_sizes()
-
-        self._win_screen = None
-        self.update_win_size(
-            self.desktop_sizes.index(self.config.window_size)
-        )  # init window
-
-        self.is_fullscreen = self.desktop_sizes.index(self.config.window_size) == 0
+            self.__init_desktop_sizes()
+            size_index = self._desktop_sizes.index(self.config.window_size)
+            self.change_size(self._desktop_sizes[size_index])
+            self._is_fullscreen = size_index == 0
+        return self
 
     def update_display(self):
         """Render to the screen"""
         pygame.display.update()
 
-    def update_win_size(self, size_option: int):
-        """Update window size with if the option is avalible in disktop sizes"""
-        try:
-            size = self.desktop_sizes[size_option]
-        except IndexError:
-            size = self.config.window_size
+    def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
+        """Update window size if it can"""
+        if not self.config.can_resize and self._win_screen is not None:
+            if not self.config.can_fullscreen or (
+                self.config.can_fullscreen
+                and (self.config.window_size != size != self._desktop_sizes[0])
+            ):
+                return False
 
-        try:
-            if size == pygame.display.get_window_size():
-                return
-        except pygame.error:
-            size = self.config.window_size
+        flags = self._const_flags
+        if fullscreen:
+            flags = self._const_flags | pygame.FULLSCREEN
+        self._prev_size = self._current_size
+        self._win_screen = pygame.display.set_mode(
+            size=size, flags=flags, depth=self.config.depth, vsync=self.config.vsync
+        )
+        self._current_size = size
+        return True
 
-        if size_option == 0:
-            try:
-                self._prev_size = pygame.display.get_window_size()
-            except pygame.error:
-                self._prev_size = size
-            if self.config.can_fullscreen:
-                if not self.is_fullscreen:
-                    self._win_screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-
-                self.is_fullscreen = not self.is_fullscreen
-                self.current_win_size = pygame.display.get_window_size()
-            return
-
-        if self.config.can_resize or self.is_fullscreen or self._win_screen is None:
-            if self.is_fullscreen and not self.config.can_resize:
-                size = self._prev_size
-            self._win_screen = pygame.display.set_mode(size)
-            self.current_win_size = pygame.display.get_window_size()
-        self.is_fullscreen = False if self.is_fullscreen else False
-
-    def toggle_fullscreen(self):
+    def toggle_fullscreen(self) -> bool:
         """Turn on/off fullscreen"""
-        if not self.is_fullscreen:
-            self.update_win_size(0)
+        if not self.config.can_fullscreen:
+            return False
+        if self._is_fullscreen:
+            has_changed = self.change_size(self._prev_size)
         else:
-            option = self.desktop_sizes.index(self._prev_size)
-            self.update_win_size(option)
-            return
+            has_changed = self.change_size(self._desktop_sizes[0], True)
+        if has_changed:
+            self._is_fullscreen = not self._is_fullscreen
+        return has_changed
 
     def clean(self, bg_color: pygame.Color):
         """fills the screen/display with the given color"""
-        self._win_screen.fill(bg_color)
+        self.screen.fill(bg_color)
         self.display.fill(bg_color)
 
-    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
-        """Returns the screen surface"""
-        return self._win_screen
-
-    def _init_desktop_sizes(self):
-        # init desktop sizes
-        self.desktop_sizes = pygame.display.get_desktop_sizes()
+    def __init_desktop_sizes(self):
+        self._desktop_sizes = pygame.display.get_desktop_sizes()
         if not self.config.avalible_window_sizes:
             self.config.avalible_window_sizes = []
         for size in sorted(self.config.avalible_window_sizes, reverse=True):
-            if size not in set(self.desktop_sizes):
-                self.desktop_sizes.append(size)
-        if self.config.window_size not in set(self.desktop_sizes):
-            self.desktop_sizes.append(self.config.window_size)
-        self.desktop_sizes = tuple(
-            sorted(self.desktop_sizes, key=lambda s: s[0], reverse=True)
+            if size not in set(self._desktop_sizes):
+                self._desktop_sizes.append(size)
+        if self.config.window_size not in set(self._desktop_sizes):
+            self._desktop_sizes.append(self.config.window_size)
+        self._desktop_sizes = tuple(
+            sorted(self._desktop_sizes, key=lambda s: s[0], reverse=True)
         )
 
     @property
+    def desktop_sizes(self):
+        """Get a list of avalible desktop sizes"""
+        return self._desktop_sizes
+
+    @property
+    def is_fullscreen(self):
+        """Get if window is fullscreen"""
+        return self._is_fullscreen
+
+    @property
     def display(self):
+        """Returns the screen surface"""
+        return self._win_screen
+
+    @property
+    def screen(self):
         """Returns the screen surface"""
         return self._win_screen
 
@@ -135,7 +139,7 @@ class WindowScreenGl(WindowScreen):
     def __init__(self, config: WindowConfig) -> None:
         self._const_flags = pygame.DOUBLEBUF | pygame.OPENGL
         self.config = config
-        self.is_fullscreen = False
+        self._is_fullscreen = False
         if not pygame.get_init():
             pygame.init()
 
@@ -146,7 +150,7 @@ class WindowScreenGl(WindowScreen):
             self.current_win_size, self._const_flags
         )
         self._screen_surf = pygame.Surface(self.config.window_size)
-        self.is_fullscreen = self.desktop_sizes.index(self.config.window_size) == 0
+        self._is_fullscreen = self._desktop_sizes.index(self.config.window_size) == 0
 
     def update_win_size(self, size_option: int):
         # TODO: a way to change the window size and _screen_surf
