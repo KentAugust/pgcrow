@@ -98,7 +98,7 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
         self.frame_length = self._animation_data[self._frame][1]
         self._flip = [flip_x, flip_y]
 
-    def copy(self) -> "Animation":
+    def copy(self) -> "SpriteAnimation":
         """Return a copy of Animation"""
         return SpriteAnimation(self._animation_data, self.loop)
 

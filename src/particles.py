@@ -43,7 +43,7 @@ class AnimatedParticle(Particle):
         """Update position and return False when finished"""
         self.animation.play(delta)
         self.pos += self.velocity * delta
-        return not self.animation.ended
+        return not self.animation.has_ended
 
     @property
     def image(self) -> pygame.Surface:
