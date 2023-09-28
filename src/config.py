@@ -43,6 +43,7 @@ class Window(Protocol):
     config: WindowConfig
     desktop_sizes: list[tuple[int, int]]
     is_fullscreen: bool
+    current_size: tuple[int, int]
 
     def __init__(self, config: WindowConfig) -> None:
         ...
