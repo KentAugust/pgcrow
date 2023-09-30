@@ -6,29 +6,25 @@ import time
 class TimeClock:
     """Basic timer"""
 
-    def __init__(self) -> None:
-        self._time = time.time()
+    @staticmethod
+    def time() -> float:
+        """Get time"""
+        return time.time()
 
-    @property
-    def seconds(self) -> float:
+    @staticmethod
+    def seconds() -> float:
         """Get time in seconds"""
+        return time.time() % 60
 
-        self._time = time.time()
-        return self._time % 60
-
-    @property
-    def minutes(self) -> float:
+    @staticmethod
+    def minutes() -> float:
         """Get time in minutes"""
+        return (time.time() % 3600) // 60
 
-        self._time = time.time()
-        return (self._time % 3600) // 60
-
-    @property
-    def hours(self) -> float:
+    @staticmethod
+    def hours() -> float:
         """Get time in hours"""
-
-        self._time = time.time()
-        return self._time // 3600
+        return time.time() // 3600
 
 
 class Delta:
@@ -40,7 +36,6 @@ class Delta:
 
     def get_delta(self) -> float:
         """Get deltatime in seconds"""
-
         self._delta = time.time() - self._prev_time
         self._prev_time = time.time()
         return self._delta
@@ -60,14 +55,12 @@ class Chronometer:
 
     def update(self, delta: float) -> float:
         """Update the currente time"""
-
         self._start_time += delta
         self._current_time = self._start_time
         return self._current_time
 
     def reset(self):
         """Set current time to 0"""
-
         self._start_time = 0
         self._current_time = 0
 
