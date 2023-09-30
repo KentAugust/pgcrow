@@ -11,4 +11,4 @@ from .particles import AnimatedParticle, Particle, ParticleManager, RectParticle
 from .scene_2d import Scene2D
 from .scene_manager import SceneManager
 from .sprites import SpriteSheet, TileSet
-from .window import WindowDisplay, WindowDisplayGl, WindowScreen, WindowScreenGl
+from .window import WindowDisplay, WindowDisplayGL, WindowScreen, WindowScreenGL

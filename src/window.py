@@ -142,7 +142,7 @@ class WindowDisplay(WindowScreen):
         return self._display
 
 
-class WindowScreenGl(WindowScreen):
+class WindowScreenGL(WindowScreen):
     """Window class that blits on the screen. Set pygame.OPENGL | pygame.DOUBLEBUF flags"""
 
     def __init__(self, config: WindowConfig) -> None:
@@ -189,7 +189,7 @@ class WindowScreenGl(WindowScreen):
         return self._screen_surf
 
 
-class WindowDisplayGl(WindowScreenGl):
+class WindowDisplayGL(WindowScreenGL):
     def __init__(self, config: WindowConfig) -> None:
         super().__init__(config)
         match config.scale_funtion:
