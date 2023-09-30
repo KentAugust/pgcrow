@@ -2,8 +2,14 @@
 Pgcrow is a pygame framework for making simple games.
 
 ## Installation
+**_With pip_**
 ```
 pip install git+https://github.com/KentAugust/pgcrow.git
+```
+
+**_With poetry_**
+```
+poetry add git+https://github.com/KentAugust/pgcrow.git
 ```
 
 ## Overview
