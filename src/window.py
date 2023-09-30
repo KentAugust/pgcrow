@@ -51,6 +51,7 @@ class WindowScreen:
             size=size, flags=flags, depth=self.config.depth, vsync=self.config.vsync
         )
         self._current_size = size
+        if fullscreen: self._current_size = self._desktop_sizes[0]
         return True
 
     def toggle_fullscreen(self) -> bool:
@@ -148,7 +149,7 @@ class WindowScreenGL(WindowScreen):
     def __init__(self, config: WindowConfig) -> None:
         super().__init__(config)
         self._const_flags = pygame.DOUBLEBUF | pygame.OPENGL
-        self._screen_surf = pygame.Surface(self.config.window_size)
+        self._screen_surf = None
 
     def init_screen(self) -> Self:
         """Initialize screen"""
