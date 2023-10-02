@@ -1,21 +1,11 @@
 import unittest
+
 import pygame
 
-from src import WindowScreen, WindowDisplay, WindowScreenGL, WindowDisplayGL
-from src.config import WindowConfig, Window
+from src import WindowDisplay, WindowDisplayGL, WindowScreen, WindowScreenGL
+from src.config import WindowConfig
 
-
-class WindowContex:
-    def __init__(self, window: Window, window_config: WindowConfig) -> None:
-        self.object = window(window_config)
-
-    def __enter__(self) -> Window:
-        return self.object
-    
-    def __exit__(self, type, value, traceback):
-        if pygame.display.get_init():
-            pygame.quit()
-
+from .test_utils import WindowContex
 
 wc = WindowConfig(
     window_size=(720, 480),
@@ -47,7 +37,7 @@ class TestWindowScreenType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
             self.assertEqual((640, 320), w.current_size)
-    
+
     def test_toggle_fullscreen(self):
         with WindowContex(WindowScreen, wc) as w:
             w.init_screen()
@@ -58,6 +48,11 @@ class TestWindowScreenType(unittest.TestCase):
             has_changed = w.toggle_fullscreen()
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
+
+    def test_get_update_function(self):
+        with WindowContex(WindowScreen, wc) as w:
+            w.init_screen()
+            self.assertEqual(pygame.display.update, w.get_update_function())
 
 
 class TestWindowDisplayType(unittest.TestCase):
@@ -83,9 +78,9 @@ class TestWindowDisplayType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
             self.assertEqual((640, 320), w.current_size)
-    
+
     def test_toggle_fullscreen(self):
-        with WindowContex(WindowScreen, wc) as w:
+        with WindowContex(WindowDisplay, wc) as w:
             w.init_screen()
             self.assertFalse(w.is_fullscreen)
             has_changed = w.toggle_fullscreen()
@@ -94,6 +89,11 @@ class TestWindowDisplayType(unittest.TestCase):
             has_changed = w.toggle_fullscreen()
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
+
+    def test_get_update_function(self):
+        with WindowContex(WindowDisplay, wc) as w:
+            w.init_screen()
+            self.assertEqual(pygame.display.update, w.get_update_function())
 
 
 class TestWindowScreenGLType(unittest.TestCase):
@@ -119,7 +119,7 @@ class TestWindowScreenGLType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
             self.assertEqual((640, 320), w.current_size)
-    
+
     def test_toggle_fullscreen(self):
         with WindowContex(WindowScreenGL, wc) as w:
             w.init_screen()
@@ -130,6 +130,11 @@ class TestWindowScreenGLType(unittest.TestCase):
             has_changed = w.toggle_fullscreen()
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
+
+    def test_get_update_function(self):
+        with WindowContex(WindowScreenGL, wc) as w:
+            w.init_screen()
+            self.assertEqual(None, w.get_update_function())
 
 
 class TestWindowDisplayGLType(unittest.TestCase):
@@ -155,7 +160,7 @@ class TestWindowDisplayGLType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
             self.assertEqual((640, 320), w.current_size)
-    
+
     def test_toggle_fullscreen(self):
         with WindowContex(WindowDisplayGL, wc) as w:
             w.init_screen()
@@ -167,3 +172,7 @@ class TestWindowDisplayGLType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
 
+    def test_get_update_function(self):
+        with WindowContex(WindowDisplayGL, wc) as w:
+            w.init_screen()
+            self.assertEqual(None, w.get_update_function())

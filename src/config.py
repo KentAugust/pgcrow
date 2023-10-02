@@ -29,7 +29,7 @@ class WindowConfig:  # pylint: disable=R0902
 class GameConfig:
     """Game configuration class"""
 
-    title: str = "Pygame Window"
+    title: str = "pygame Window"
     target_fps: int = 0
     start_fullscreen: bool = False
     clean_color: tuple[int, int, int] = (0, 0, 0)
@@ -80,6 +80,9 @@ class Game(Protocol):
 
     def run(self):
         """Run the main game loop"""
+
+    def init_game(self):
+        """Init window, title, scene manager and fullscreen"""
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
         """Update window size with if the option is avalible in window disktop sizes"""

@@ -28,12 +28,7 @@ class Game:  # pylint: disable=R0902
 
     def run(self):
         """Run the main game loop"""
-        self.window.init_screen()
-        self.scene_manager.start_initial_scene()
-        self.set_title(self.config.title)
-        if self.config.start_fullscreen and self.window.config.can_fullscreen:
-            self.window.toggle_fullscreen()
-
+        self.init_game()
         while True:
             delta = self.deltatimer.get_delta()
             self.window.clean(self.config.clean_color)
@@ -44,6 +39,14 @@ class Game:  # pylint: disable=R0902
             self.scene_manager.render_screen(self.window.screen)
             if update_funtion is not None: update_funtion()
             self.clock.tick(self.config.target_fps)
+
+    def init_game(self):
+        """Init window, title, scene manager and fullscreen"""
+        self.window.init_screen()
+        self.scene_manager.start_initial_scene()
+        self.set_title(self.config.title)
+        if self.config.start_fullscreen and self.window.config.can_fullscreen:
+            self.window.toggle_fullscreen()
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
         """Update window size with if the option is avalible in disktop sizes"""
