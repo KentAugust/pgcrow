@@ -1,14 +1,14 @@
 import unittest
+
 import pygame
 
-from src import WindowScreen, Game,EventHandler, SceneManager, Scene2D
-from src.config import WindowConfig, GameConfig
-from src.timers import Delta
+from src import EventHandler, Game, Scene2D, SceneManager, WindowScreen
+from src.config import GameConfig, WindowConfig
 from src.inputs import Keyboard, Mouse
 from src.maths import Vec2
+from src.timers import Delta
 
 from .test_utils import WindowContex
-
 
 wc = WindowConfig((720, 480), 2, "nearest", [(360, 240)])
 gc = GameConfig("TestWindow", 60)

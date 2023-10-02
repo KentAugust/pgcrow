@@ -1,9 +1,12 @@
 import pygame
+
 import src
 
 
 class WindowContex:
-    def __init__(self, window: src.config.Window, window_config: src.config.WindowConfig) -> None:
+    def __init__(
+        self, window: src.config.Window, window_config: src.config.WindowConfig
+    ) -> None:
         self.object = window(window_config)
 
     def __enter__(self) -> src.config.Window:

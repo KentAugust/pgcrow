@@ -1,11 +1,11 @@
 import unittest
+
 import pygame
 
-from src import WindowScreen, WindowDisplay, WindowScreenGL, WindowDisplayGL
+from src import WindowDisplay, WindowDisplayGL, WindowScreen, WindowScreenGL
 from src.config import WindowConfig
 
 from .test_utils import WindowContex
-
 
 wc = WindowConfig(
     window_size=(720, 480),
