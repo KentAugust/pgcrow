@@ -29,7 +29,7 @@ class WindowConfig:  # pylint: disable=R0902
 class GameConfig:
     """Game configuration class"""
 
-    title: str = "Pygame Window"
+    title: str = "pygame Window"
     target_fps: int = 0
     start_fullscreen: bool = False
     clean_color: tuple[int, int, int] = (0, 0, 0)
