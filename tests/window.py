@@ -59,6 +59,11 @@ class TestWindowScreenType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
 
+    def test_get_update_function(self):
+        with WindowContex(WindowScreen, wc) as w:
+            w.init_screen()
+            self.assertEqual(pygame.display.update, w.get_update_function())
+
 
 class TestWindowDisplayType(unittest.TestCase):
     def test_construction(self):
@@ -85,7 +90,7 @@ class TestWindowDisplayType(unittest.TestCase):
             self.assertEqual((640, 320), w.current_size)
     
     def test_toggle_fullscreen(self):
-        with WindowContex(WindowScreen, wc) as w:
+        with WindowContex(WindowDisplay, wc) as w:
             w.init_screen()
             self.assertFalse(w.is_fullscreen)
             has_changed = w.toggle_fullscreen()
@@ -94,6 +99,11 @@ class TestWindowDisplayType(unittest.TestCase):
             has_changed = w.toggle_fullscreen()
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
+
+    def test_get_update_function(self):
+        with WindowContex(WindowDisplay, wc) as w:
+            w.init_screen()
+            self.assertEqual(pygame.display.update, w.get_update_function())
 
 
 class TestWindowScreenGLType(unittest.TestCase):
@@ -131,6 +141,11 @@ class TestWindowScreenGLType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
 
+    def test_get_update_function(self):
+        with WindowContex(WindowScreenGL, wc) as w:
+            w.init_screen()
+            self.assertEqual(None, w.get_update_function())
+
 
 class TestWindowDisplayGLType(unittest.TestCase):
     def test_construction(self):
@@ -167,3 +182,7 @@ class TestWindowDisplayGLType(unittest.TestCase):
             self.assertTrue(has_changed)
             self.assertFalse(w.is_fullscreen)
 
+    def test_get_update_function(self):
+        with WindowContex(WindowDisplayGL, wc) as w:
+            w.init_screen()
+            self.assertEqual(None, w.get_update_function())
