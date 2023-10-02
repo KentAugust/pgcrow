@@ -6,77 +6,70 @@ import time
 class TimeClock:
     """Basic timer"""
 
-    def __init__(self) -> None:
-        self.__time = time.time()
+    @staticmethod
+    def time() -> float:
+        """Get time"""
+        return time.time()
 
-    @property
-    def seconds(self) -> float:
+    @staticmethod
+    def seconds() -> float:
         """Get time in seconds"""
+        return time.time() % 60
 
-        self.__time = time.time()
-        return self.__time % 60
-
-    @property
-    def minutes(self) -> float:
+    @staticmethod
+    def minutes() -> float:
         """Get time in minutes"""
+        return (time.time() % 3600) // 60
 
-        self.__time = time.time()
-        return (self.__time % 3600) // 60
-
-    @property
-    def hours(self) -> float:
+    @staticmethod
+    def hours() -> float:
         """Get time in hours"""
-
-        self.__time = time.time()
-        return self.__time // 3600
+        return time.time() // 3600
 
 
 class Delta:
     """Timer for deltatime"""
 
     def __init__(self) -> None:
-        self.__dt = 0
-        self.__prev_time = time.time()
+        self._delta = 0
+        self._prev_time = time.time()
 
-    def get_dt(self) -> float:
+    def get_delta(self) -> float:
         """Get deltatime in seconds"""
-
-        self.__dt = time.time() - self.__prev_time
-        self.__prev_time = time.time()
-        return self.__dt
+        self._delta = time.time() - self._prev_time
+        self._prev_time = time.time()
+        return self._delta
 
     @property
     def deltatime(self) -> float:
         """Returns deltatime"""
-        return self.__dt
+        return self._delta
 
 
 class Chronometer:
     """chronometer for counting"""
 
     def __init__(self) -> None:
-        self.__current_time = 0
-        self.__start_time = 0
+        self._current_time = 0
+        self._start_time = 0
 
-    def update(self, dt: float) -> float:
+    def update(self, delta: float) -> float:
         """Update the currente time"""
-
-        self.__start_time += dt
-        self.__current_time = self.__start_time
-        return self.__current_time
+        self._start_time += delta
+        self._current_time = self._start_time
+        return self._current_time
 
     def reset(self):
         """Set current time to 0"""
-
-        self.__start_time = 0
-        self.__current_time = 0
+        self._start_time = 0
+        self._current_time = 0
 
     @property
     def current_time(self) -> float:
         """Get currente time in seconds"""
-        return self.__current_time
+        return self._current_time
 
     @property
     def current_time_ms(self) -> float:
         """Get currente time in miliseconds"""
-        return self.__current_time * 1000
+        return self._current_time * 1000

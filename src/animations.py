@@ -23,11 +23,11 @@ class Animation:  # pylint: disable=R0902
         self._timer = Chronometer()
         self._current_time = 0
 
-    def play(self, dt: float):
+    def play(self, delta: float):
         """Updates the current frame"""
         if not self.has_ended and not self.is_paused:
-            self._timer.update(dt)
-            self._current_time += dt
+            self._timer.update(delta)
+            self._current_time += delta
 
         # update animation frame
         if self._timer.current_time >= self.frame_length:
@@ -89,16 +89,16 @@ class SpriteAnimation(Animation):  # pylint: disable=R0902
         super().__init__(lenght, len(animation_data) * lenght, loop)
         self._animation_data = animation_data
         self._total_frames = len(animation_data)
-        self.frame_length = self._animation_data[0][1]
         self._flip = [False, False]
+        self.frame_length = self._animation_data[0][1]
 
-    def play(self, dt: float, flip_x: bool = False, flip_y: bool = False):
+    def play(self, delta: float, flip_x: bool = False, flip_y: bool = False):
         """Updates the current frame"""
-        super().play(dt)
+        super().play(delta)
         self.frame_length = self._animation_data[self._frame][1]
         self._flip = [flip_x, flip_y]
 
-    def copy(self) -> "Animation":
+    def copy(self) -> "SpriteAnimation":
         """Return a copy of Animation"""
         return SpriteAnimation(self._animation_data, self.loop)
 

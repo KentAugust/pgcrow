@@ -2,7 +2,7 @@
 module for setting different type of configuration needed for other classes"""
 
 from dataclasses import dataclass
-from typing import Any, NamedTuple, Protocol
+from typing import Any, NamedTuple, Protocol, Self
 
 import pygame
 
@@ -29,7 +29,7 @@ class WindowConfig:  # pylint: disable=R0902
 class GameConfig:
     """Game configuration class"""
 
-    title: str = "Pygame Window"
+    title: str = "pygame Window"
     target_fps: int = 0
     start_fullscreen: bool = False
     clean_color: tuple[int, int, int] = (0, 0, 0)
@@ -38,20 +38,24 @@ class GameConfig:
 class Window(Protocol):
     """Window Protocol"""
 
+    screen: pygame.Surface
     display: pygame.Surface
     config: WindowConfig
+    desktop_sizes: list[tuple[int, int]]
+    is_fullscreen: bool
+    current_size: tuple[int, int]
 
     def __init__(self, config: WindowConfig) -> None:
         ...
 
-    def update_display(self):
-        """Render to the screen"""
+    def init_screen(self) -> Self:
+        """Initialize screen"""
 
-    def update_win_size(self, size_option: int):
-        """Update window size with if the option is avalible in disktop sizes"""
+    def get_update_function(self, offset: tuple[float, float] = (0, 0)):
+        """Render to the screen and flip"""
 
-    def get_screen(self, offset: tuple[float, float] = (0, 0)) -> pygame.Surface:
-        """Returns the screen surface"""
+    def change_size(self, size: tuple[int, int], fullscreen=False) -> bool:
+        """Update window size if it can"""
 
     def toggle_fullscreen(self):
         """Turn on/off fullscreen"""
@@ -65,6 +69,7 @@ class Game(Protocol):
 
     config: GameConfig
     window: Window
+    scene_manager: "SceneManager"
     clock: pygame.Clock
     display_offset: Vec2
     keyboard: Keyboard
@@ -75,6 +80,12 @@ class Game(Protocol):
 
     def run(self):
         """Run the main game loop"""
+
+    def init_game(self):
+        """Init window, title, scene manager and fullscreen"""
+
+    def update_win_size(self, size_option: int) -> tuple[int, int]:
+        """Update window size with if the option is avalible in window disktop sizes"""
 
     def set_title(self, title="Pygame Window", icontitle: str | None = None):
         """Set window title"""
@@ -101,11 +112,14 @@ class SceneManager(Protocol):
     ) -> None:
         ...
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """Update current scene"""
 
     def render(self, display: pygame.Surface, offset: tuple[float, float] = (0, 0)):
         """Render current scene"""
+
+    def render_screen(self, screen: pygame.Surface):
+        """Render current scene onto screen"""
 
     def add_scene(self, name: str, scene: CallableScene):
         """Adds new scene to scenes"""
@@ -128,10 +142,10 @@ class Scene2D(Protocol):
     def __init__(self, game: Game) -> None:
         ...
 
-    def on_enter_update(self, dt) -> bool:
+    def on_enter_update(self, delta) -> bool:
         """Ativate when enter the scene and return True when finish"""
 
-    def on_exit_update(self, dt) -> bool:
+    def on_exit_update(self, delta) -> bool:
         """Ativate when exit the scene and return True when finish"""
 
     def on_enter_render(self, display: pygame.Surface):
@@ -143,7 +157,7 @@ class Scene2D(Protocol):
     def set_scene_manager(self, scene_manager: SceneManager):
         """Set scene manager"""
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """For updating stuff"""
 
     def render(self, display: pygame.Surface):

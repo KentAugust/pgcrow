@@ -23,10 +23,10 @@ class Particle:
         self.duration = duration
         self._chronometer = Chronometer()
 
-    def update(self, dt: float) -> bool:
+    def update(self, delta: float) -> bool:
         """Update position and return False when finished"""
-        self._chronometer.update(dt)
-        self.pos += self.velocity * dt
+        self._chronometer.update(delta)
+        self.pos += self.velocity * delta
         return self.duration - self._chronometer.current_time >= 0.0
 
 
@@ -39,11 +39,11 @@ class AnimatedParticle(Particle):
         self.animation = animation.copy()
         super().__init__(self.animation.image, pos, vel, 0)
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """Update position and return False when finished"""
-        self.animation.play(dt)
-        self.pos += self.velocity * dt
-        return not self.animation.ended
+        self.animation.play(delta)
+        self.pos += self.velocity * delta
+        return not self.animation.has_ended
 
     @property
     def image(self) -> pygame.Surface:
@@ -86,10 +86,10 @@ class ParticleManager:
         self._particles: list[Particle] = []
         self.limit = limit
 
-    def update(self, dt: float):
+    def update(self, delta: float):
         """Update particle list and each one of them"""
         self._particles = [
-            particle for particle in self._particles if particle.update(dt)
+            particle for particle in self._particles if particle.update(delta)
         ]
 
     def add(self, particles: list[Particle]):

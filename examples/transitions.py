@@ -148,21 +148,22 @@ class SceneTwo(pgcrow.Scene2D):
         display.blit(self.surf, (0, 0))
 
 
+# setting our window configuration
+win_config = pgcrow.config.WindowConfig(
+    window_size=(720, 480),
+    scale_factor=2
+)
+
+# setting our game configuration
+game_config = pgcrow.config.GameConfig(
+    title="Example Transitions", 
+    target_fps=60,
+)
+
+
 class MyGame(pgcrow.Game):
     def __init__(self) -> None:
-        # setting our window configuration
-        win_config = pgcrow.config.WindowConfig(
-            window_size=(720, 480),
-            scale_factor=2
-        )
-
-        # setting our game configuration
-        game_config = pgcrow.config.GameConfig(
-            title="Example Transitions", 
-            target_fps=60,
-        )
         super().__init__(game_config, pgcrow.WindowDisplay(win_config))
-
         # setting scene manager with SceneOne as our initial scene
         self.scene_manager = pgcrow.SceneManager(
             self,

@@ -25,7 +25,7 @@ class Keyboard:
     """Class for handling keys events"""
 
     def __init__(self):
-        self.keys = {}
+        self.keys: dict[int, Key] = {}
         self.timer = TimeClock()
 
     def handle_event(self, event: pygame.event.Event) -> None:

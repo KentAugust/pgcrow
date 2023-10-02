@@ -18,28 +18,26 @@ import pygame
 import pgcrow
 
 
+# setting our window configuration
+window_config = pgcrow.config.WindowConfig(
+    window_size=(640, 360),
+    scale_factor=3,
+    # set extra screen sizes we want
+    avalible_window_sizes=[(320, 180), (640, 360), (960, 540), (1280, 720)],
+    can_fullscreen=True, 
+    can_resize=True
+)
+
+# setting our game configuration
+game_config = pgcrow.config.GameConfig(
+    title="Example Window",
+    target_fps=60,
+    clean_color=(30, 30, 30),
+    start_fullscreen=False
+)
+
 class MyGame(pgcrow.Game):
     def __init__(self, window_type = None) -> None:
-        # setting our window configuration
-        window_config = pgcrow.config.WindowConfig(
-            window_size=(640, 360),
-            scale_factor=3,
-            # set extra screen sizes we want
-            avalible_window_sizes=[(320, 180), (640, 360), (960, 540), (1280, 720)],
-            can_fullscreen=True, 
-            can_resize=True
-        )
-
-        title = f"Example Window{window_type.title() if window_type in ('screen', 'display') else 'Screen'}"
-
-        # setting our game configuration
-        game_config = pgcrow.config.GameConfig(
-            title=title,
-            target_fps=60,
-            clean_color=(30, 30, 30),
-            start_fullscreen=False
-        )
-
         if window_type == "display":
             window = pgcrow.WindowDisplay(window_config) # WindowDisplay blits on a surface
         else:
@@ -70,13 +68,13 @@ class MyScene(pgcrow.Scene2D):
     def update(self, dt): # Game will pass dt
         # changing the screen size
         if self.game.keyboard.just_pressed(pygame.K_1):
-            self.game.window.update_win_size(1)
+            self.game.update_win_size(1)
         if self.game.keyboard.just_pressed(pygame.K_2):
-            self.game.window.update_win_size(2)
+            self.game.update_win_size(2)
         if self.game.keyboard.just_pressed(pygame.K_3):
-            self.game.window.update_win_size(3)
+            self.game.update_win_size(3)
         if self.game.keyboard.just_pressed(pygame.K_4):
-            self.game.window.update_win_size(4)
+            self.game.update_win_size(4)
         if self.game.keyboard.just_pressed(pygame.K_F11):
             self.game.window.toggle_fullscreen()
 
@@ -107,7 +105,7 @@ class MyScene(pgcrow.Scene2D):
         screen.blit(txt_surf, (10, 30))
 
         # important mouse_pos_scaled is a tuple of floats
-        mouse_pos_scaled = self.game.mouse.get_pos_scaled(self.game.window.current_win_size, self.game.window.display.get_size())
+        mouse_pos_scaled = self.game.mouse.get_pos_scaled(screen.get_size(), self.game.window.display.get_size())
         txt_surf = self.font.render(f"Mouse pos scaled {mouse_pos_scaled}", False, (200, 200, 200))
         screen.blit(txt_surf, (10, 40))
 
