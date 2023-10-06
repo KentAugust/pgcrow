@@ -56,8 +56,7 @@ class Game:  # pylint: disable=R0902
         """Handle a single event"""
         match event.type:
             case pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                self.quit()
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
         """Update window size with if the option is avalible in disktop sizes"""
