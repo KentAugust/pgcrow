@@ -5,13 +5,13 @@ from typing import Optional
 
 import pygame
 
-from .general import InputKey
 from ..timers import TimeClock
+from .general import InputKey
 
 
 @dataclass
-class Key:
-    """Key dataclass"""
+class KeyboardKey:
+    """KeyboardKey dataclass"""
 
     key: int
     name: str
@@ -26,15 +26,14 @@ class Keyboard:
     """Class for handling keys events"""
 
     def __init__(self):
-        self._keys: dict[InputKey, Key] = {}
-        self.timer = TimeClock()
+        self._keys: dict[InputKey, KeyboardKey] = {}
 
     def handle_event(self, event: pygame.Event) -> None:
         """Handle a single event"""
         if event.type == pygame.KEYDOWN:
-            start_time = self.timer.seconds
+            start_time = TimeClock().seconds()
             start_frame = pygame.time.get_ticks()
-            self._keys[event.key] = Key(
+            self._keys[event.key] = KeyboardKey(
                 key=event.key,
                 name=pygame.key.name(event.key),
                 pressed=True,
@@ -45,10 +44,10 @@ class Keyboard:
             )
         elif event.type == pygame.KEYUP:
             self._keys[event.key].pressed = False
-            self._keys[event.key].end_time = self.timer.seconds
+            self._keys[event.key].end_time = TimeClock().seconds()
             self._keys[event.key].end_frame = pygame.time.get_ticks()
 
-    def get_input_data(self, key: InputKey) -> Optional[Key]:
+    def get_input_data(self, key: InputKey) -> Optional[KeyboardKey]:
         """Get data of an specific key"""
         return self._keys[key] if key in self._keys else None
 
@@ -74,11 +73,19 @@ class Keyboard:
 
     def hold_time(self, key: InputKey) -> Optional[float]:
         """Return how long an input key is being pressed"""
-        return self.timer.seconds - k.start_time if (k := self.get_input_data(key)) else None
+        return (
+            TimeClock().seconds() - k.start_time
+            if (k := self.get_input_data(key))
+            else None
+        )
 
     def hold_frames(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key is being pressed"""
-        return pygame.time.get_ticks() - k.start_frame if (k := self.get_input_data(key)) else None
+        return (
+            pygame.time.get_ticks() - k.start_frame
+            if (k := self.get_input_data(key))
+            else None
+        )
 
     def release_time(self, key: InputKey) -> Optional[float]:
         """Return the time an input key stop being pressed"""
@@ -90,18 +97,22 @@ class Keyboard:
 
     def time_since_release(self, key: InputKey) -> Optional[float]:
         """Return how long an input key stop pressed"""
-        return self.timer.seconds - t if (t := self.release_time(key)) else None
+        return TimeClock().seconds() - t if (t := self.release_time(key)) else None
 
     def frames_since_press(self, key: InputKey) -> Optional[int]:
-        return pygame.time.get_ticks() - k.start_frame if (k := self.get_input_data(key)) else None
+        return (
+            pygame.time.get_ticks() - k.start_frame
+            if (k := self.get_input_data(key))
+            else None
+        )
 
     def frames_since_release(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key stop pressed"""
         return pygame.time.get_ticks() - t if (t := self.release_frame(key)) else None
 
-    def get_pressed(self) -> list[Key]:
+    def get_pressed(self) -> list[KeyboardKey]:
         """Get all keys being pressed"""
         return [k for k in self._keys.values() if k.pressed]
 
-    def __getitem__(self, key: InputKey) -> Optional[Key]:
+    def __getitem__(self, key: InputKey) -> Optional[KeyboardKey]:
         return self.get_input_data(key)
