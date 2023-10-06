@@ -31,7 +31,7 @@ class Keyboard:
     def handle_event(self, event: pygame.Event) -> None:
         """Handle a single event"""
         if event.type == pygame.KEYDOWN:
-            start_time = TimeClock().seconds()
+            start_time = TimeClock.seconds()
             start_frame = pygame.time.get_ticks()
             self._keys[event.key] = KeyboardKey(
                 key=event.key,
@@ -44,7 +44,7 @@ class Keyboard:
             )
         elif event.type == pygame.KEYUP:
             self._keys[event.key].pressed = False
-            self._keys[event.key].end_time = TimeClock().seconds()
+            self._keys[event.key].end_time = TimeClock.seconds()
             self._keys[event.key].end_frame = pygame.time.get_ticks()
 
     def get_input_data(self, key: InputKey) -> Optional[KeyboardKey]:
@@ -74,7 +74,7 @@ class Keyboard:
     def hold_time(self, key: InputKey) -> Optional[float]:
         """Return how long an input key is being pressed"""
         return (
-            TimeClock().seconds() - k.start_time
+            TimeClock.seconds() - k.start_time
             if (k := self.get_input_data(key))
             else None
         )
@@ -97,7 +97,7 @@ class Keyboard:
 
     def time_since_release(self, key: InputKey) -> Optional[float]:
         """Return how long an input key stop pressed"""
-        return TimeClock().seconds() - t if (t := self.release_time(key)) else None
+        return TimeClock.seconds() - t if (t := self.release_time(key)) else None
 
     def frames_since_release(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key stop pressed"""

@@ -10,8 +10,8 @@ from .general import InputKey
 
 
 @dataclass
-class Button:
-    """Button dataclass"""
+class MouseButton:
+    """MouseButton dataclass"""
 
     pos: tuple[int, int]
     number: int
@@ -52,17 +52,16 @@ class Mouse:
     """Class for handling mouse events"""
 
     def __init__(self):
-        self._buttons: dict[InputKey, Button] = {}
+        self._buttons: dict[InputKey, MouseButton] = {}
         self.motion: Motion | None = None
         self.wheel: Wheel | None = None
-        self.timer = TimeClock()
 
     def handle_event(self, event: pygame.event.Event) -> None:
         match event.type:
             case pygame.MOUSEBUTTONDOWN:
-                start_time = self.timer.seconds
+                start_time = TimeClock.seconds()
                 start_frame = pygame.time.get_ticks()
-                self._buttons[event.button] = Button(
+                self._buttons[event.button] = MouseButton(
                     pos=event.pos,
                     number=event.button,
                     touch=event.touch,
@@ -75,7 +74,7 @@ class Mouse:
                 )
             case pygame.MOUSEBUTTONUP:
                 self._buttons[event.button].pressed = False
-                self._buttons[event.button].end_time = self.timer.seconds
+                self._buttons[event.button].end_time = TimeClock.seconds()
                 self._buttons[event.button].end_frame = pygame.time.get_ticks()
             case pygame.MOUSEMOTION:
                 self.motion = Motion(
@@ -92,7 +91,7 @@ class Mouse:
                     event.window,
                 )
 
-    def get_input_data(self, key: InputKey) -> Optional[Button]:
+    def get_input_data(self, key: InputKey) -> Optional[MouseButton]:
         """Get data of an specific input"""
         return self._buttons[key] if key in self._buttons else None
 
@@ -119,7 +118,7 @@ class Mouse:
     def hold_time(self, key: InputKey) -> Optional[float]:
         """Return how long an input key is being pressed"""
         return (
-            self.timer.seconds - k.start_time
+            TimeClock.seconds() - k.start_time
             if (k := self.get_input_data(key))
             else None
         )
@@ -142,13 +141,13 @@ class Mouse:
 
     def time_since_release(self, key: InputKey) -> Optional[float]:
         """Return how long an input key stop pressed"""
-        return self.timer.seconds - t if (t := self.release_time(key)) else None
+        return TimeClock.seconds() - t if (t := self.release_time(key)) else None
 
     def frames_since_release(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key stop pressed"""
         return pygame.time.get_ticks() - t if (t := self.release_frame(key)) else None
 
-    def get_pressed(self) -> list[Button]:
+    def get_pressed(self) -> list[MouseButton]:
         """Get all buttons being pressed"""
         return [k for k in self._buttons.values() if k.pressed]
 
@@ -188,5 +187,5 @@ class Mouse:
         """Hide or show the mouse cursor"""
         return pygame.mouse.set_visible(visible)
 
-    def __getitem__(self, key: InputKey) -> Button:
+    def __getitem__(self, key: InputKey) -> MouseButton:
         return self.get_input_data(key)
