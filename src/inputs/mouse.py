@@ -188,5 +188,5 @@ class Mouse:
         """Hide or show the mouse cursor"""
         return pygame.mouse.set_visible(visible)
 
-    def __getitem__(self, key: int) -> Button:
+    def __getitem__(self, key: InputKey) -> Button:
         return self.get_input_data(key)
