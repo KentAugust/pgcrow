@@ -57,7 +57,7 @@ class Keyboard:
 
     def just_pressed(self, key: InputKey) -> bool:
         """Check if key is pressed in this exact frame"""
-        return self.frames_since_press(key) == 0
+        return self.hold_frames(key) == 0
 
     def just_released(self, key: InputKey) -> bool:
         """Check if key stop being pressed in this exact frame"""
