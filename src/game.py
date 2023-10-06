@@ -20,7 +20,7 @@ class Game:  # pylint: disable=R0902
         self.window = window
         self.keyboard = Keyboard()
         self.mouse = Mouse()
-        self.event_handler = EventHandler(self)
+        self.event_handler = EventHandler()
         self.scene_manager = SceneManager(self)  # set main as an empty scene
         self.clock = pygame.Clock()
         self.deltatimer = Delta()
@@ -31,22 +31,33 @@ class Game:  # pylint: disable=R0902
         self.init_game()
         while True:
             delta = self.deltatimer.get_delta()
-            self.window.clean(self.config.clean_color)
             self.event_handler.loop()
+            self.window.clean(self.config.clean_color)
             self.scene_manager.update(delta)
             self.scene_manager.render(self.window.display)
             update_funtion = self.window.get_update_function(self.display_offset)
             self.scene_manager.render_screen(self.window.screen)
-            if update_funtion is not None: update_funtion()
+            if update_funtion is not None:
+                update_funtion()
             self.clock.tick(self.config.target_fps)
 
     def init_game(self):
         """Init window, title, scene manager and fullscreen"""
         self.window.init_screen()
+        self.event_handler.register(self)
+        self.event_handler.register(self.keyboard)
+        self.event_handler.register(self.mouse)
         self.scene_manager.start_initial_scene()
         self.set_title(self.config.title)
         if self.config.start_fullscreen and self.window.config.can_fullscreen:
             self.window.toggle_fullscreen()
+
+    def handle_event(self, event: pygame.Event):
+        """Handle a single event"""
+        match event.type:
+            case pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
         """Update window size with if the option is avalible in disktop sizes"""
