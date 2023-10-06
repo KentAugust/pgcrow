@@ -99,13 +99,6 @@ class Keyboard:
         """Return how long an input key stop pressed"""
         return TimeClock().seconds() - t if (t := self.release_time(key)) else None
 
-    def frames_since_press(self, key: InputKey) -> Optional[int]:
-        return (
-            pygame.time.get_ticks() - k.start_frame
-            if (k := self.get_input_data(key))
-            else None
-        )
-
     def frames_since_release(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key stop pressed"""
         return pygame.time.get_ticks() - t if (t := self.release_frame(key)) else None
