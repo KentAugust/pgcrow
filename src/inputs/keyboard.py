@@ -57,7 +57,7 @@ class Keyboard:
 
     def just_pressed(self, key: InputKey) -> bool:
         """Check if key is pressed in this exact frame"""
-        return self.frames_since_press(key) == 0
+        return self.hold_frames(key) == 0
 
     def just_released(self, key: InputKey) -> bool:
         """Check if key stop being pressed in this exact frame"""
@@ -98,13 +98,6 @@ class Keyboard:
     def time_since_release(self, key: InputKey) -> Optional[float]:
         """Return how long an input key stop pressed"""
         return TimeClock().seconds() - t if (t := self.release_time(key)) else None
-
-    def frames_since_press(self, key: InputKey) -> Optional[int]:
-        return (
-            pygame.time.get_ticks() - k.start_frame
-            if (k := self.get_input_data(key))
-            else None
-        )
 
     def frames_since_release(self, key: InputKey) -> Optional[int]:
         """Return how many frames an input key stop pressed"""
