@@ -3,7 +3,7 @@
 import pygame
 from pygame.transform import flip
 
-from .consts import FrameData
+from .config import FrameData
 from .timers import Chronometer
 
 

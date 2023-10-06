@@ -10,6 +10,7 @@ from .consts import ScaleFuntions
 from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
 from .maths import Vec2
+from typing import NamedTuple
 
 
 @dataclass
@@ -104,6 +105,12 @@ class CallableScene(NamedTuple):
 
     scene_class: "Scene2D"
     kwargs: dict[str, Any]
+
+
+class FrameData(NamedTuple):
+    """Class for frame data object"""
+    surf: pygame.Surface
+    duration: float
 
 
 class SceneManager(Protocol):
