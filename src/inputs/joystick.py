@@ -46,10 +46,8 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
     _all_joysticks: dict[str, pygame.joystick.JoystickType] = {}
     _active_joys_id: list[int] = []
 
-    def __init__(
-        self, joy_id: int, get_input_funtion_type=JoyGetInputFuction.BUTTONS
-    ) -> None:
-        joystick = pygame.Joystick(joy_id)
+    def __init__(self, get_input_funtion_type=JoyGetInputFuction.BUTTONS) -> None:
+        joystick = self._connect_joystick()
         self._instance_id = joystick.get_instance_id()
         self._guid = joystick.get_guid()
         self._joystick_active = True
@@ -58,6 +56,16 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
         Joystick._all_joysticks[self._guid] = joystick
         Joystick._active_joys_id.append(self._instance_id)
         self.change_get_input_function(get_input_funtion_type)
+
+    def _connect_joystick(self):
+        """Search for an avalibe id and return a new joystick"""
+        if len(Joystick._active_joys_id) == pygame.joystick.get_count():
+            raise pygame.error("There aren't more joystick connected.")
+
+        for i in range(pygame.joystick.get_count()):
+            if i not in Joystick._active_joys_id:
+                break
+        return pygame.Joystick(i)
 
     def change_get_input_function(self, funtion_type=JoyGetInputFuction.BUTTONS):
         """Change get_input_data function between get_axi and get_button"""
@@ -72,15 +80,15 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
         match event.type:
             case pygame.JOYDEVICEADDED:
                 if event.guid == self._guid and not self._joystick_active:
+                    if self._instance_id in Joystick._active_joys_id:
+                        # assign a new joystick
+                        Joystick._all_joysticks[self._guid] = self._connect_joystick()
                     try:
                         # init joystick if is connected
                         Joystick._all_joysticks[self._guid].init()
                     except pygame.error:
-                        # search for an avalibe id and assign a new joystick
-                        for i in range(pygame.joystick.get_count()):
-                            if i not in Joystick._active_joys_id:
-                                break
-                        Joystick._all_joysticks[self._guid] = pygame.Joystick(i)
+                        # assign a new joystick
+                        Joystick._all_joysticks[self._guid] = self._connect_joystick()
 
                     self._instance_id = Joystick._all_joysticks[
                         self._guid
