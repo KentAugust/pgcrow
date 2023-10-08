@@ -43,13 +43,20 @@ class Axi:  # pylint: disable=R0902
 class Joystick:  # pylint: disable=R0902 disable=R0904
     """Class for handling keys events"""
 
+    _all_joysticks: dict[str, pygame.joystick.JoystickType] = {}
+    _active_joys_id: list[int] = []
+
     def __init__(
         self, joy_id: int, get_input_funtion_type=JoyGetInputFuction.BUTTONS
     ) -> None:
-        self._joy_id = joy_id
-        self._joystick = pygame.Joystick(self._joy_id)
+        joystick = pygame.Joystick(joy_id)
+        self._instance_id = joystick.get_instance_id()
+        self._guid = joystick.get_guid()
+        self._joystick_active = True
         self._buttons: dict[InputKey, JoyButton] = {}
         self._axis: dict[InputKey, Axi] = {}
+        Joystick._all_joysticks[self._guid] = joystick
+        Joystick._active_joys_id.append(self._instance_id)
         self.change_get_input_function(get_input_funtion_type)
 
     def change_get_input_function(self, funtion_type=JoyGetInputFuction.BUTTONS):
@@ -60,38 +67,36 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
             case _:
                 self.get_input_data = self.get_button
 
-    def get_joystick(self):
-        """Get JoystickType"""
-        return self._joystick
-
-    def get_joystick_buttons(self):
-        """JoystickType.get_button for all buttons"""
-        if self._joystick is None:
-            return []
-        return [
-            self._joystick.get_button(i) for i in range(self._joystick.get_numbuttons())
-        ]
-
-    def get_joystick_axis(self):
-        """JoystickType.get_axis for all axes"""
-        if self._joystick is None:
-            return []
-        return [self._joystick.get_axis(i) for i in range(self._joystick.get_numaxes())]
-
-    def get_balls(self):
-        """JoystickType.get_ball for all balls"""
-        if self._joystick is None:
-            return []
-        return [self._joystick.get_ball for i in range(self._joystick.get_numballs())]
-
     def handle_event(self, event: pygame.Event) -> None:
         """Handle a single event"""
         match event.type:
             case pygame.JOYDEVICEADDED:
-                self._joystick = pygame.Joystick(self._joy_id)
+                if event.guid == self._guid and not self._joystick_active:
+                    try:
+                        # init joystick if is connected
+                        Joystick._all_joysticks[self._guid].init()
+                    except pygame.error:
+                        # search for an avalibe id and assign a new joystick
+                        for i in range(pygame.joystick.get_count()):
+                            if i not in Joystick._active_joys_id:
+                                break
+                        Joystick._all_joysticks[self._guid] = pygame.Joystick(i)
+
+                    self._instance_id = Joystick._all_joysticks[
+                        self._guid
+                    ].get_instance_id()
+                    self._joystick_active = True
+                    Joystick._active_joys_id.append(self._instance_id)
             case pygame.JOYDEVICEREMOVED:
-                self._joystick = None
+                if event.instance_id == self._instance_id and self._joystick_active:
+                    Joystick._all_joysticks[self._guid].quit()
+                    Joystick._active_joys_id.remove(self._instance_id)
+                    self._joystick_active = False
+                    self._buttons = {}
+                    self._axis = {}
             case pygame.JOYAXISMOTION:
+                if event.instance_id != self._instance_id:
+                    return
                 if event.axis not in self._axis:
                     start_time = TimeClock.seconds()
                     start_frame = pygame.time.get_ticks()
@@ -123,6 +128,8 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
                         axi.end_time = None
                         axi.end_frame = None
             case pygame.JOYBUTTONDOWN:
+                if event.instance_id != self._instance_id:
+                    return
                 start_time = TimeClock().seconds()
                 start_frame = pygame.time.get_ticks()
                 self._buttons[event.button] = JoyButton(
@@ -136,6 +143,8 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
                     None,
                 )
             case pygame.JOYBUTTONUP:
+                if event.instance_id != self._instance_id:
+                    return
                 button: JoyButton = self._buttons[event.button]
                 button.pressed = False
                 button.end_time = TimeClock.seconds()
@@ -257,3 +266,48 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
         if key in self._axis:
             sensitivity = max(0.0, min(sensitivity, 1.0))
             self._axis[key].sensitivity = sensitivity
+
+    @property
+    def joystick_type(self):
+        """Get JoystickType"""
+        return Joystick._all_joysticks[self._guid]
+
+    @property
+    def instance_id(self):
+        """Get joystick instance id"""
+        return self._instance_id
+
+    @property
+    def is_active(self):
+        """It's joystick active"""
+        return self._joystick_active
+
+    @property
+    def joystick_buttons(self):
+        """JoystickType.get_button for all buttons"""
+        if not self._joystick_active:
+            return []
+        return [
+            Joystick._all_joysticks[self._guid].get_button(i)
+            for i in range(Joystick._all_joysticks[self._guid].get_numbuttons())
+        ]
+
+    @property
+    def joystick_axis(self):
+        """JoystickType.get_axis for all axes"""
+        if not self._joystick_active:
+            return []
+        return [
+            Joystick._all_joysticks[self._guid].get_axis(i)
+            for i in range(Joystick._all_joysticks[self._guid].get_numaxes())
+        ]
+
+    @property
+    def joystick_balls(self):
+        """JoystickType.get_ball for all balls"""
+        if not self._joystick_active:
+            return []
+        return [
+            Joystick._all_joysticks[self._guid].get_ball
+            for i in range(Joystick._all_joysticks[self._guid].get_numballs())
+        ]
