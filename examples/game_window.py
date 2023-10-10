@@ -80,10 +80,10 @@ class MyScene(pgcrow.Scene2D):
 
         # player controll
         self.movement = [
-            self.game.keyboard.is_held(pygame.K_a), # left
-            self.game.keyboard.is_held(pygame.K_d), # right
-            self.game.keyboard.is_held(pygame.K_w), # up
-            self.game.keyboard.is_held(pygame.K_s), # down
+            self.game.keyboard.is_pressed(pygame.K_a), # left
+            self.game.keyboard.is_pressed(pygame.K_d), # right
+            self.game.keyboard.is_pressed(pygame.K_w), # up
+            self.game.keyboard.is_pressed(pygame.K_s), # down
         ]
 
         # updating the player
@@ -107,7 +107,7 @@ class MyScene(pgcrow.Scene2D):
         # important mouse_pos_scaled is a tuple of floats
         mouse_pos_scaled = self.game.mouse.get_pos_scaled(screen.get_size(), self.game.window.display.get_size())
         txt_surf = self.font.render(f"Mouse pos scaled {mouse_pos_scaled}", False, (200, 200, 200))
-        screen.blit(txt_surf, (10, 40))
+        screen.blit(txt_surf, (10, 50))
 
 
 if __name__ == "__main__":

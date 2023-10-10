@@ -117,15 +117,15 @@ class Level(pgcrow.Scene2D):
         self.game.set_title(f"Example WindowScreenGL {self.game.clock.get_fps():.0f} fps   {color}")
 
         # changing each color channel
-        if self.game.keyboard.is_held(pygame.K_b):
+        if self.game.keyboard.is_pressed(pygame.K_b):
             b = off_x * abs(off_y - 1)
-        elif self.game.keyboard.is_held(pygame.K_r):
+        elif self.game.keyboard.is_pressed(pygame.K_r):
             r = off_x * abs(off_y - 1)
-        elif self.game.keyboard.is_held(pygame.K_g):
+        elif self.game.keyboard.is_pressed(pygame.K_g):
             g = off_x * abs(off_y - 1)
         
         # changing colorA/colorB transform value
-        if self.game.mouse.is_held(1):
+        if self.game.mouse.is_pressed(1):
             self.program[self.color_selection] = (r, g, b, 1.0)
 
         self.program["time"] = pgcrow.timers.TimeClock.seconds()

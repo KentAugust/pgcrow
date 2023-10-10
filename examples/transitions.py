@@ -117,10 +117,10 @@ class SceneTwo(pgcrow.Scene2D):
 
         # controll player
         self.movement = [
-            self.game.keyboard.is_held(pygame.K_a), # left
-            self.game.keyboard.is_held(pygame.K_d), # right
-            self.game.keyboard.is_held(pygame.K_w), # up
-            self.game.keyboard.is_held(pygame.K_s), # down
+            self.game.keyboard.is_pressed(pygame.K_a), # left
+            self.game.keyboard.is_pressed(pygame.K_d), # right
+            self.game.keyboard.is_pressed(pygame.K_w), # up
+            self.game.keyboard.is_pressed(pygame.K_s), # down
         ]
 
         # update player pos
