@@ -7,8 +7,10 @@ from typing import Any, NamedTuple, Protocol, Self
 import pygame
 
 from .consts import ScaleFuntions
+from .event_handler import EventHandler
 from .inputs import Keyboard, Mouse
 from .maths import Vec2
+from typing import NamedTuple
 
 
 @dataclass
@@ -70,6 +72,7 @@ class Game(Protocol):
     config: GameConfig
     window: Window
     scene_manager: "SceneManager"
+    event_handler: EventHandler
     clock: pygame.Clock
     display_offset: Vec2
     keyboard: Keyboard
@@ -83,6 +86,9 @@ class Game(Protocol):
 
     def init_game(self):
         """Init window, title, scene manager and fullscreen"""
+
+    def handle_event(self, event: pygame.Event):
+        """Handle a single event"""
 
     def update_win_size(self, size_option: int) -> tuple[int, int]:
         """Update window size with if the option is avalible in window disktop sizes"""
@@ -99,6 +105,12 @@ class CallableScene(NamedTuple):
 
     scene_class: "Scene2D"
     kwargs: dict[str, Any]
+
+
+class FrameData(NamedTuple):
+    """Class for frame data object"""
+    surf: pygame.Surface
+    duration: float
 
 
 class SceneManager(Protocol):
