@@ -3,8 +3,6 @@
 from enum import Enum, StrEnum
 
 
-
-
 class ScaleFuntions(StrEnum):
     """Enum for scale funtion on WindowConfig"""
 
@@ -20,3 +18,7 @@ class Math(Enum):
     PHI = 1.618033988749895
     E = 2.718281828459045
     G = 9.80665
+
+class JoyGetInputFuction(StrEnum):
+    BUTTONS = "buttons"
+    AXES = "axes"
