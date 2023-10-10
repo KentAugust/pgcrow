@@ -44,7 +44,7 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
     """Class for handling keys events"""
 
     _all_joysticks: dict[str, pygame.joystick.JoystickType] = {}
-    _active_joys_id: list[int] = []
+    _active_joys: list[int] = []
 
     def __init__(self, get_input_funtion_type=JoyGetInputFuction.BUTTONS) -> None:
         joystick = self._connect_joystick()
@@ -54,16 +54,16 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
         self._buttons: dict[InputKey, JoyButton] = {}
         self._axis: dict[InputKey, Axi] = {}
         Joystick._all_joysticks[self._guid] = joystick
-        Joystick._active_joys_id.append(self._instance_id)
+        Joystick._active_joys.append(self._instance_id)
         self.change_get_input_function(get_input_funtion_type)
 
     def _connect_joystick(self):
         """Search for an avalibe id and return a new joystick"""
-        if len(Joystick._active_joys_id) == pygame.joystick.get_count():
+        if len(Joystick._active_joys) == pygame.joystick.get_count():
             raise pygame.error("There aren't more joystick connected.")
 
         for i in range(pygame.joystick.get_count()):
-            if i not in Joystick._active_joys_id:
+            if i not in Joystick._active_joys:
                 break
         return pygame.Joystick(i)
 
@@ -80,7 +80,7 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
         match event.type:
             case pygame.JOYDEVICEADDED:
                 if event.guid == self._guid and not self._joystick_active:
-                    if self._instance_id in Joystick._active_joys_id:
+                    if self._instance_id in Joystick._active_joys:
                         # assign a new joystick
                         Joystick._all_joysticks[self._guid] = self._connect_joystick()
                     try:
@@ -94,11 +94,11 @@ class Joystick:  # pylint: disable=R0902 disable=R0904
                         self._guid
                     ].get_instance_id()
                     self._joystick_active = True
-                    Joystick._active_joys_id.append(self._instance_id)
+                    Joystick._active_joys.append(self._instance_id)
             case pygame.JOYDEVICEREMOVED:
                 if event.instance_id == self._instance_id and self._joystick_active:
                     Joystick._all_joysticks[self._guid].quit()
-                    Joystick._active_joys_id.remove(self._instance_id)
+                    Joystick._active_joys.remove(self._instance_id)
                     self._joystick_active = False
                     self._buttons = {}
                     self._axis = {}
